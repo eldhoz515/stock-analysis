@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Stock Analysis - Concall Reports</title>
+    <title>Stock Analysis - Reports Dashboard</title>
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
       rel="stylesheet"
@@ -488,7 +488,7 @@
           <i class="fas fa-chart-line"></i> Stock Analysis Hub
         </h1>
         <p class="lead text-muted">
-          Navigate through concall analysis reports by date
+          Navigate through concall and announcement analysis reports
         </p>
       </div>
 
@@ -498,17 +498,19 @@
             <i class="fas fa-clock"></i>
             Latest Analysis
           </h3>
-          <p class="priority-subtitle">Most recent concall analysis report</p>
+          <p class="priority-subtitle">Most recent analysis reports</p>
         </div>
 
         <a href="#" id="yesterdayLink" class="priority-link">
           <div class="priority-link-content">
             <div class="priority-link-left">
               <div class="priority-icon">
-                <i class="fas fa-calendar-day"></i>
+                <i class="fas fa-phone-volume"></i>
               </div>
               <div class="priority-text">
-                <div class="priority-text-title">Yesterday's Report</div>
+                <div class="priority-text-title">
+                  Yesterday's Concall Report
+                </div>
                 <div class="priority-text-desc">
                   View the latest concall analysis
                 </div>
@@ -525,11 +527,38 @@
             </div>
           </div>
         </a>
+
+        <a href="#" id="latestAnnouncementLink" class="priority-link">
+          <div class="priority-link-content">
+            <div class="priority-link-left">
+              <div class="priority-icon">
+                <i class="fas fa-bullhorn"></i>
+              </div>
+              <div class="priority-text">
+                <div class="priority-text-title">
+                  Latest Announcements Report
+                </div>
+                <div class="priority-text-desc">
+                  View the most recent announcements analysis
+                </div>
+              </div>
+            </div>
+            <div class="priority-link-right">
+              <span
+                id="latestAnnouncementStatus"
+                class="status-indicator status-checking"
+              >
+                <span class="loading-spinner"></span>
+                Checking...
+              </span>
+            </div>
+          </div>
+        </a>
       </div>
 
       <div class="calendar-section">
         <div class="calendar-header">
-          <h3><i class="fas fa-calendar-alt"></i> Browse by Date</h3>
+          <h3><i class="fas fa-phone-volume"></i> Browse Concalls by Date</h3>
           <div class="calendar-nav">
             <button class="nav-btn" onclick="changeMonth(-1)">
               <i class="fas fa-chevron-left"></i>
@@ -552,11 +581,25 @@
         style="display: none"
       >
         <div class="calendar-header">
-          <h3><i class="fas fa-history"></i> Past Analysis Reports</h3>
+          <h3><i class="fas fa-history"></i> Past Concall Reports</h3>
         </div>
 
         <div class="report-links" id="pastReportsList">
           <!-- Past reports will be populated here -->
+        </div>
+      </div>
+
+      <div
+        class="calendar-section"
+        id="pastAnnouncementsSection"
+        style="display: none"
+      >
+        <div class="calendar-header">
+          <h3><i class="fas fa-bullhorn"></i> Past Announcements Reports</h3>
+        </div>
+
+        <div class="report-links" id="pastAnnouncementsList">
+          <!-- Past announcement reports will be populated here -->
         </div>
       </div>
     </div>
@@ -567,10 +610,15 @@
           this.currentDate = new Date();
           this.reportCache = new Map();
           this.pastReports = [];
+          this.pastAnnouncements = [];
           this.githubApiBase =
             "https://api.github.com/repos/eldhoz515/stock-analysis/contents/concalls";
           this.githubPagesBase =
             "https://eldhoz515.github.io/stock-analysis/concalls";
+          this.announcementsApiBase =
+            "https://api.github.com/repos/eldhoz515/stock-analysis/contents/announcements";
+          this.announcementsPagesBase =
+            "https://eldhoz515.github.io/stock-analysis/announcements";
 
           this.init();
         }
@@ -579,7 +627,9 @@
           this.renderCalendar();
           await this.checkYesterdayReport();
           await this.loadAvailableReports();
+          await this.loadAvailableAnnouncements();
           this.renderPastReports();
+          this.renderPastAnnouncements();
         }
 
         async checkYesterdayReport() {
@@ -761,6 +811,81 @@
             .replace(/\b\w/g, (l) => l.toUpperCase());
         }
 
+        async loadAvailableAnnouncements() {
+          try {
+            const response = await fetch(this.announcementsApiBase);
+            const files = await response.json();
+
+            if (Array.isArray(files)) {
+              files.forEach((file) => {
+                if (
+                  file.name.startsWith("past_") &&
+                  file.name.endsWith(".html")
+                ) {
+                  this.pastAnnouncements.push({
+                    filename: file.name,
+                    url: `${this.announcementsPagesBase}/${file.name}`,
+                    displayName: this.formatAnnouncementReportName(file.name),
+                  });
+                }
+              });
+
+              // Sort announcement reports by date (most recent first)
+              this.pastAnnouncements.sort((a, b) => {
+                return b.filename.localeCompare(a.filename);
+              });
+            }
+          } catch (error) {
+            console.error("Error loading announcement reports:", error);
+          }
+
+          // Check for latest announcement report
+          await this.checkLatestAnnouncementReport();
+        }
+
+        async checkLatestAnnouncementReport() {
+          const link = document.getElementById("latestAnnouncementLink");
+          const status = document.getElementById("latestAnnouncementStatus");
+
+          try {
+            if (this.pastAnnouncements.length > 0) {
+              const latestReport = this.pastAnnouncements[0];
+              link.href = latestReport.url;
+              status.className = "status-indicator status-available";
+              status.innerHTML =
+                '<i class="fas fa-check-circle"></i> Available';
+            } else {
+              status.className = "status-indicator status-unavailable";
+              status.innerHTML =
+                '<i class="fas fa-times-circle"></i> Not Available';
+              link.style.opacity = "0.6";
+              link.style.pointerEvents = "none";
+            }
+          } catch (error) {
+            status.className = "status-indicator status-unavailable";
+            status.innerHTML =
+              '<i class="fas fa-exclamation-triangle"></i> Error';
+            console.error("Error checking latest announcement report:", error);
+          }
+        }
+
+        formatAnnouncementReportName(filename) {
+          // Convert past_2024-03-06.html to "March 6, 2024"
+          const dateMatch = filename.match(
+            /past_(\d{4})-(\d{2})-(\d{2})\.html/,
+          );
+          if (dateMatch) {
+            const [, year, month, day] = dateMatch;
+            const date = new Date(year, parseInt(month) - 1, parseInt(day));
+            return date.toLocaleDateString("en-US", {
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+            });
+          }
+          return filename.replace(/^past_/, "").replace(".html", "");
+        }
+
         renderPastReports() {
           if (this.pastReports.length === 0) return;
 
@@ -771,7 +896,28 @@
           this.pastReports.forEach((report) => {
             html += `
                         <a href="${report.url}" class="report-link">
-                            <i class="fas fa-${report.filename === "past.html" ? "star" : "file-alt"}"></i>
+                            <i class="fas fa-${report.filename === "past.html" ? "star" : "phone-volume"}"></i>
+                            ${report.displayName}
+                            <i class="fas fa-external-link-alt" style="margin-left: auto; opacity: 0.7;"></i>
+                        </a>
+                    `;
+          });
+
+          list.innerHTML = html;
+          section.style.display = "block";
+        }
+
+        renderPastAnnouncements() {
+          if (this.pastAnnouncements.length === 0) return;
+
+          const section = document.getElementById("pastAnnouncementsSection");
+          const list = document.getElementById("pastAnnouncementsList");
+
+          let html = "";
+          this.pastAnnouncements.forEach((report) => {
+            html += `
+                        <a href="${report.url}" class="report-link">
+                            <i class="fas fa-bullhorn"></i>
                             ${report.displayName}
                             <i class="fas fa-external-link-alt" style="margin-left: auto; opacity: 0.7;"></i>
                         </a>
