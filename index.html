@@ -29,7 +29,12 @@
         --dark-border: #3a3a5e;
         --dark-text: #e2e8f0;
         --dark-text-muted: #94a3b8;
-        --gradient-bg: linear-gradient(135deg, #0f0f23 0%, #16213e 50%, #1a1a2e 100%);
+        --gradient-bg: linear-gradient(
+          135deg,
+          #0f0f23 0%,
+          #16213e 50%,
+          #1a1a2e 100%
+        );
         --card-gradient: linear-gradient(135deg, #1e1e3f 0%, #2a2a4a 100%);
         --glow-primary: 0 0 20px rgba(59, 130, 246, 0.3);
         --glow-success: 0 0 20px rgba(16, 185, 129, 0.3);
@@ -200,7 +205,7 @@
         background: var(--dark-surface-light);
         border-color: var(--primary-color);
         transform: translateY(-2px);
-        box-shadow: 
+        box-shadow:
           0 8px 25px rgba(0, 0, 0, 0.4),
           0 0 0 1px var(--primary-color);
         color: inherit;
@@ -222,7 +227,11 @@
       .priority-icon {
         width: 48px;
         height: 48px;
-        background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+        background: linear-gradient(
+          135deg,
+          var(--primary-color),
+          var(--primary-light)
+        );
         border-radius: 12px;
         display: flex;
         align-items: center;
@@ -491,7 +500,7 @@
           </h3>
           <p class="priority-subtitle">Most recent concall analysis report</p>
         </div>
-        
+
         <a href="#" id="yesterdayLink" class="priority-link">
           <div class="priority-link-content">
             <div class="priority-link-left">
@@ -500,11 +509,16 @@
               </div>
               <div class="priority-text">
                 <div class="priority-text-title">Yesterday's Report</div>
-                <div class="priority-text-desc">View the latest concall analysis</div>
+                <div class="priority-text-desc">
+                  View the latest concall analysis
+                </div>
               </div>
             </div>
             <div class="priority-link-right">
-              <span id="yesterdayStatus" class="status-indicator status-checking">
+              <span
+                id="yesterdayStatus"
+                class="status-indicator status-checking"
+              >
                 <span class="loading-spinner"></span>
                 Checking...
               </span>
@@ -728,7 +742,7 @@
           const report = this.reportCache.get(dateStr);
           if (!report) return;
 
-          window.open(report.url, "_blank");
+          window.location.href = report.url;
         }
 
         formatPastReportName(filename) {
@@ -756,7 +770,7 @@
           let html = "";
           this.pastReports.forEach((report) => {
             html += `
-                        <a href="${report.url}" target="_blank" class="report-link">
+                        <a href="${report.url}" class="report-link">
                             <i class="fas fa-${report.filename === "past.html" ? "star" : "file-alt"}"></i>
                             ${report.displayName}
                             <i class="fas fa-external-link-alt" style="margin-left: auto; opacity: 0.7;"></i>
