@@ -1,0 +1,1287 @@
+
+<!DOCTYPE html>
+<html lang="en" style="background:black;">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock Analysis Report</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #ffffff;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --danger-color: #ef4444;
+            --dark-bg: #000000;
+            --dark-surface: #0a0a0a;
+            --dark-border: #222222;
+            --dark-text: #d4d4d4;
+            --dark-text-muted: #999999;
+        }
+        
+        * {
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: #000000;
+            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            color: var(--dark-text);
+            margin: 0;
+            padding: 0;
+        }
+        
+        .main-container {
+            background: #000000;
+            margin: 0 auto;
+            padding: 40px;
+            max-width: 1400px;
+        }
+        
+        .hero-section {
+            text-align: center;
+            margin-bottom: 50px;
+            padding: 40px 0;
+            background: #0a0a0a;
+            border-radius: 20px;
+            border: 1px solid var(--dark-border);
+            scroll-margin: 20px;
+        }
+        
+        .hero-title {
+            color: #d4d4d4;
+            font-size: 3.5rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+        
+        .section-divider {
+            background: #0a0a0a;
+            border-radius: 20px;
+            padding: 30px;
+            margin: 50px 0;
+            text-align: center;
+            border: 1px solid var(--dark-border);
+        }
+        
+        .section-title {
+            color: #d4d4d4;
+            font-size: 2.5rem;
+            font-weight: 600;
+            margin: 0;
+        }
+        
+        .home-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #1a1a1a;
+            color: #d4d4d4;
+            text-decoration: none;
+            font-weight: 600;
+            padding: 12px 24px;
+            border-radius: 12px;
+            border: 1px solid var(--dark-border);
+            transition: all 0.3s ease;
+            margin-top: 15px;
+        }
+        
+        .home-button:hover {
+            background: #222222;
+            color: #d4d4d4;
+            transform: translateY(-2px);
+        }
+        
+        .company-card, .announcement-card {
+            background: linear-gradient(135deg, #0a0a0a 0%, #141414 100%);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 25px;
+            border: 1px solid var(--dark-border);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            scroll-margin: 10px;
+        }
+        
+        .announcement-card {
+            border-left: 5px solid #444444;
+        }
+        
+        .company-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .company-name {
+            font-size: 2rem;
+            font-weight: 600;
+            color: #d4d4d4;
+            margin: 0;
+        }
+        
+        .announcement-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: var(--dark-text);
+            margin: 10px 0;
+            line-height: 1.4;
+        }
+        
+        .price-change {
+            font-size: 1.6rem;
+            font-weight: 600;
+            padding: 12px 20px;
+            border-radius: 30px;
+            color: #d4d4d4;
+            border: 1px solid var(--dark-border);
+            white-space: nowrap;
+        }
+        
+        .announcement-date {
+            background: #1a1a1a;
+            color: #d4d4d4;
+            font-size: 0.9rem;
+            font-weight: 600;
+            padding: 8px 16px;
+            border-radius: 20px;
+            border: 1px solid var(--dark-border);
+            white-space: nowrap;
+        }
+        
+        .pdf-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #1a1a1a;
+            color: #d4d4d4;
+            text-decoration: none;
+            font-weight: 600;
+            padding: 12px 20px;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            border: 1px solid var(--dark-border);
+            margin-top: 15px;
+        }
+        
+        .pdf-link:hover {
+            background: #222222;
+            color: #d4d4d4;
+            transform: translateY(-2px);
+        }
+        
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+            margin: 25px 0;
+        }
+        
+        .metric-item {
+            background: var(--dark-surface);
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            border: 1px solid var(--dark-border);
+            transition: all 0.3s ease;
+        }
+        
+        .metric-label {
+            font-size: 0.85rem;
+            color: var(--dark-text-muted);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+        
+        .metric-value {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--dark-text);
+        }
+        
+        .summary-section {
+            background: var(--dark-surface);
+            padding: 25px;
+            border-radius: 15px;
+            border-left: 5px solid var(--primary-color);
+            margin-top: 25px;
+        }
+        
+        .summary-text {
+            color: var(--dark-text-muted);
+            line-height: 1.8;
+            font-size: 1.5rem;
+            margin-top: 15px;
+        }
+        
+        .badge-success-lg {
+            background: linear-gradient(135deg, #059669, #16a34a);
+        }
+        
+        .badge-success {
+            background: linear-gradient(135deg, #10b981, #34d399);
+        }
+        
+        .badge-warning {
+            background: linear-gradient(135deg, #d97706, #f59e0b);
+        }
+        
+        .badge-danger {
+            background: linear-gradient(135deg, #dc2626, #ef4444);
+        }
+        
+        .stats-banner {
+            background: #0a0a0a;
+            color: #d4d4d4;
+            padding: 35px;
+            border-radius: 20px;
+            margin-bottom: 40px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 25px;
+            border: 1px solid var(--dark-border);
+        }
+        
+        .stat-item {
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 600;
+            display: block;
+            color: #d4d4d4;
+        }
+        
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.8;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-top: 5px;
+        }
+        
+        .growth-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.95rem;
+            padding: 8px 16px;
+            border-radius: 20px;
+            background: #1a1a1a;
+            color: #10b981;
+            border: 1px solid var(--dark-border);
+            margin-bottom: 10px;
+        }
+        
+        .company-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: #d4d4d4;
+            text-decoration: none;
+            font-weight: 600;
+            padding: 12px 20px;
+            border-radius: 12px;
+            background: #1a1a1a;
+            border: 1px solid var(--dark-border);
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+        
+        .company-link:hover {
+            background: #222222;
+            color: #d4d4d4;
+            transform: translateY(-2px);
+        }
+        
+        .text-muted {
+            color: var(--dark-text-muted) !important;
+        }
+        
+        .lead {
+            color: var(--dark-text-muted);
+            font-size: 1.1rem;
+        }
+        
+        @media (max-width: 768px) {
+            .hero-title { font-size: 2.5rem; }
+            .section-title { font-size: 2rem; }
+            .company-header { flex-direction: column; gap: 15px; }
+            .metrics-grid { grid-template-columns: 1fr 1fr; }
+            .main-container { padding: 20px; margin: 10px; }
+            .stats-banner { grid-template-columns: 1fr 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <div class="hero-section">
+            <h1 class="hero-title">
+                <i class="fas fa-chart-line"></i> Stock Analysis Report
+            </h1>
+            <p class="lead text-muted">
+                <i class="far fa-calendar"></i> Generated for July 06, 2026
+            </p>
+            <a href="https://eldhoz515.github.io/stock-analysis/" class="home-button">
+                <i class="fas fa-home"></i> Back to Calendar
+            </a>
+        </div>
+        
+        <div class="stats-banner">
+            <div class="stat-item">
+                <span class="stat-number">2</span>
+                <div class="stat-label">Concalls Analyzed</div>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number">15</span>
+                <div class="stat-label">Announcements</div>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number">1</span>
+                <div class="stat-label">High Growth (>50%)</div>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number">1341%</span>
+                <div class="stat-label">Highest Prediction</div>
+            </div>
+        </div>
+
+        <div class="section-divider">
+            <h2 class="section-title">
+                <i class="fas fa-microphone"></i> Concall Analysis
+            </h2>
+        </div>
+    
+        <div class="company-card">
+            <div class="company-header">
+                <div>
+                    <h2 class="company-name">Matrix Geo Sol.</h2>
+                    <div class="d-flex gap-2 flex-wrap mt-2">
+                        <a href="https://www.screener.in/company/MGSL/" target="_blank" class="company-link">
+                            <i class="fas fa-external-link-alt"></i> View on Screener
+                        </a>
+                    </div>
+                </div>
+                <div class="price-change badge-success-lg">
+                    <i class="fas fa-arrow-up"></i> 1,340.7%
+                </div>
+            </div>
+            
+            <div class="metrics-grid">
+                <div class="metric-item">
+                    <div class="metric-label">Market Cap</div>
+                    <div class="metric-value">₹87.1 Cr</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">P/E Ratio</div>
+                    <div class="metric-value">
+                        <span class="badge badge-success">8.65</span>
+                    </div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Sales</div>
+                    <div class="metric-value">₹40.1 Cr</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">OPM</div>
+                    <div class="metric-value">32.0%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Promoter Holding</div>
+                    <div class="metric-value">67.3%</div>
+                </div>
+            </div>
+            
+            <div class="d-flex gap-2 mb-3">
+                <div class="growth-indicator">
+                    <i class="fas fa-chart-line"></i>
+                    <span>CAGR: 65.6% over 5 years</span>
+                </div>
+            </div>
+            
+            <div class="summary-section">
+                <h5><i class="fas fa-lightbulb text-warning"></i> AI Analysis Summary</h5>
+                <p class="summary-text">Matrix Geo targets INR 65 crore revenue for FY27 (60–65% YoY growth from INR 40.1 crore) and aims for INR 500 crore within five years (≈50% CAGR). Growth will come from confirmed orders (~INR 18 crore), an active bid pipeline (~INR 32 crore) with 60–70% expected conversion, expanding repeat government and private clients, higher international revenues (25–30%), larger-ticket projects, and monetization of sector-specific platforms/Digital Twin, GeoAI and SaaS offerings, supported by R&D, selective project wins and operational leverage.</p>
+            </div>
+        </div>
+    
+        <div class="company-card">
+            <div class="company-header">
+                <div>
+                    <h2 class="company-name">Delaplex</h2>
+                    <div class="d-flex gap-2 flex-wrap mt-2">
+                        <a href="https://www.screener.in/company/DELAPLEX/consolidated/" target="_blank" class="company-link">
+                            <i class="fas fa-external-link-alt"></i> View on Screener
+                        </a>
+                    </div>
+                </div>
+                <div class="price-change badge-warning">
+                    <i class="fas fa-arrow-up"></i> 46.7%
+                </div>
+            </div>
+            
+            <div class="metrics-grid">
+                <div class="metric-item">
+                    <div class="metric-label">Market Cap</div>
+                    <div class="metric-value">₹93.2 Cr</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">P/E Ratio</div>
+                    <div class="metric-value">
+                        <span class="badge badge-success">7.25</span>
+                    </div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Sales</div>
+                    <div class="metric-value">₹68.9 Cr</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">OPM</div>
+                    <div class="metric-value">%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Promoter Holding</div>
+                    <div class="metric-value">74.2%</div>
+                </div>
+            </div>
+            
+            <div class="d-flex gap-2 mb-3">
+                <div class="growth-indicator">
+                    <i class="fas fa-chart-line"></i>
+                    <span>CAGR: 3.0% over 2 years</span>
+                </div>
+            </div>
+            
+            <div class="summary-section">
+                <h5><i class="fas fa-lightbulb text-warning"></i> AI Analysis Summary</h5>
+                <p class="summary-text">Delaplex targets revenue growth (FY26 total ₹73.1 crore consolidated / ₹730.7 Mn) and continued expansion by increasing domestic contribution (38.7% with 49.3% YoY domestic growth), expanding North America/EMEA presence, scaling Micro Data Center (MDC) deployments via BSNL partnership, monetizing in‑house IP (MDC, AMS, MDM), launching AI‑driven solutions, cross‑selling enterprise COEs, strategic acquisitions/partnerships, and sales team expansion alongside talent upskilling and cost optimizations to drive higher-margin, recurring revenues.</p>
+            </div>
+        </div>
+    
+        <div class="section-divider">
+            <h2 class="section-title">
+                <i class="fas fa-bullhorn"></i> Company Announcements
+            </h2>
+        </div>
+    
+        <div class="announcement-card">
+            <div class="company-header">
+                <div>
+                    <h2 class="company-name">Delaplex</h2>
+                    <div class="d-flex gap-4 flex-wrap mt-2">
+                        <a href="https://www.screener.in/company/DELAPLEX/consolidated/" target="_blank" class="company-link">
+                            <i class="fas fa-external-link-alt"></i> View on Screener
+                        </a>
+                        <a href="https://nsearchives.nseindia.com/corporate/DELAPLEX_06072026191253_Investor_Presentation_Intimation_Final_Signed.pdf" target="_blank" class="company-link">
+                            <i class="fas fa-file-pdf"></i> View Announcement
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="metrics-grid">
+                <div class="metric-item">
+                    <div class="metric-label">Market Cap</div>
+                    <div class="metric-value">₹93.2 Cr</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">P/E Ratio</div>
+                    <div class="metric-value">
+                        <span class="badge badge-success">7.25</span>
+                    </div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Sales</div>
+                    <div class="metric-value">₹68.9 Cr</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">OPM 5Year</div>
+                    <div class="metric-value">%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Promoter Holding</div>
+                    <div class="metric-value">74.2%</div>
+                </div>
+            </div>
+            
+            <div class="summary-section"><h5><i class="fas fa-info-circle text-info"></i> Summary</h5><p class="summary-text">Delaplex’s investor presentation highlights the company’s evolution into a technology-led digital transformation partner with capabilities in AI, Data, Cloud, Micro Data Centers (MDCs) and proprietary IP (MDC platform, AMS, MDM). It details financial results for FY26, strategic partnerships (including BSNL), acquisitions (Blueberry, Celestia Crew), expansion plans, AI-driven solutions, and focus on R&D/innovation and upskilling to drive new AI and edge computing products and services.</p></div>
+        </div>
+        
+        <div class="announcement-card">
+            <div class="company-header">
+                <div>
+                    <h2 class="company-name">Safe Enterprises</h2>
+                    <div class="d-flex gap-4 flex-wrap mt-2">
+                        <a href="https://www.screener.in/company/SAFEENTP/consolidated/" target="_blank" class="company-link">
+                            <i class="fas fa-external-link-alt"></i> View on Screener
+                        </a>
+                        <a href="https://nsearchives.nseindia.com/corporate/SAFEENTERPRISES_06072026183558_press_releasee.pdf" target="_blank" class="company-link">
+                            <i class="fas fa-file-pdf"></i> View Announcement
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="metrics-grid">
+                <div class="metric-item">
+                    <div class="metric-label">Market Cap</div>
+                    <div class="metric-value">₹1,338.0 Cr</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">P/E Ratio</div>
+                    <div class="metric-value">
+                        <span class="badge badge-warning">20.7</span>
+                    </div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Sales</div>
+                    <div class="metric-value">₹218.0 Cr</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">OPM 5Year</div>
+                    <div class="metric-value">%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Promoter Holding</div>
+                    <div class="metric-value">70.1%</div>
+                </div>
+            </div>
+            
+            <div class="summary-section"><h5><i class="fas fa-info-circle text-info"></i> Summary</h5><p class="summary-text">Safe Enterprises Retail Fixtures Limited (SERFL) launched WAVE, an RFID-powered self-checkout retail automation platform, and deployed its first commercial orders. Built on RFID, WAVE enables automatic product identification in a checkout zone to speed transactions, reduce queues, improve billing accuracy and streamline store operations. The move expands SERFL from physical retail infrastructure into intelligent retail technology, targeting organized retail formats and validating market acceptance as the company pursues an integrated infrastructure-plus-automation strategy.</p></div>
+        </div>
+        
+        <div class="announcement-card">
+            <div class="company-header">
+                <div>
+                    <h2 class="company-name">Novus Loyalty</h2>
+                    <div class="d-flex gap-4 flex-wrap mt-2">
+                        <a href="https://www.screener.in/company/544735/" target="_blank" class="company-link">
+                            <i class="fas fa-external-link-alt"></i> View on Screener
+                        </a>
+                        <a href="https://www.bseindia.com/stockinfo/AnnPdfOpen.aspx?Pname=ee0177f6-acb4-40ac-b740-9a313e9911dc.pdf" target="_blank" class="company-link">
+                            <i class="fas fa-file-pdf"></i> View Announcement
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="metrics-grid">
+                <div class="metric-item">
+                    <div class="metric-label">Market Cap</div>
+                    <div class="metric-value">₹214.0 Cr</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">P/E Ratio</div>
+                    <div class="metric-value">
+                        <span class="badge badge-warning">23.0</span>
+                    </div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Sales</div>
+                    <div class="metric-value">₹127.0 Cr</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">OPM 5Year</div>
+                    <div class="metric-value">%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Promoter Holding</div>
+                    <div class="metric-value">70.1%</div>
+                </div>
+            </div>
+            
+            <div class="summary-section"><h5><i class="fas fa-info-circle text-info"></i> Summary</h5><p class="summary-text">Novus Loyalty is developing NoCXy AI, an AI-powered decision engine to add an intelligence layer to its enterprise loyalty platform. Built with IPO-funded product innovation, NoCXy AI will analyze multi-touch customer data, predict behavior, personalize rewards, automate engagement journeys, and include 12 specialized AI agents across member experience, merchant & partner, and platform intelligence pillars. The platform aims to enable predictive analytics, fraud detection, automated orchestration, and continuous self-learning to improve campaign effectiveness, retention, and loyalty program economics for banks, fintechs, retailers, and large enterprises.</p></div>
+        </div>
+        
+        <div class="announcement-card">
+            <div class="company-header">
+                <div>
+                    <h2 class="company-name">Kellton Tech</h2>
+                    <div class="d-flex gap-4 flex-wrap mt-2">
+                        <a href="https://www.screener.in/company/KELLTONTEC/consolidated/" target="_blank" class="company-link">
+                            <i class="fas fa-external-link-alt"></i> View on Screener
+                        </a>
+                        <a href="https://www.bseindia.com/stockinfo/AnnPdfOpen.aspx?Pname=b5fc677d-bae0-4bdc-889a-ff8a43eab327.pdf" target="_blank" class="company-link">
+                            <i class="fas fa-file-pdf"></i> View Announcement
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="metrics-grid">
+                <div class="metric-item">
+                    <div class="metric-label">Market Cap</div>
+                    <div class="metric-value">₹813.0 Cr</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">P/E Ratio</div>
+                    <div class="metric-value">
+                        <span class="badge badge-success">8.87</span>
+                    </div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Sales</div>
+                    <div class="metric-value">₹1,217.0 Cr</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">OPM 5Year</div>
+                    <div class="metric-value">11.2%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Promoter Holding</div>
+                    <div class="metric-value">37.7%</div>
+                </div>
+            </div>
+            
+            <div class="summary-section"><h5><i class="fas fa-info-circle text-info"></i> Summary</h5><p class="summary-text">Kellton Tech EU (KTSL subsidiary) and Kuwait’s Action Energy Company formed a strategic JV (51% AEC, 49% Kellton) to deploy AI-led digital transformation across the GCC energy sector. The five-year renewable JV will offer digital oilfield solutions—centered on Kellton’s OPTIMA platform—IT services (cloud, cybersecurity, ERP, systems integration) and aims to open a Doha office. The partnership combines AEC’s regional oilfield expertise with Kellton’s AI, cloud and data capabilities to modernize operations, enable AI-driven decision-making, and capture GCC oil & gas digitalization opportunities.</p></div>
+        </div>
+        
+        <div class="announcement-card">
+            <div class="company-header">
+                <div>
+                    <h2 class="company-name">Transport Corp.</h2>
+                    <div class="d-flex gap-4 flex-wrap mt-2">
+                        <a href="https://www.screener.in/company/TCI/consolidated/" target="_blank" class="company-link">
+                            <i class="fas fa-external-link-alt"></i> View on Screener
+                        </a>
+                        <a href="https://www.bseindia.com/stockinfo/AnnPdfOpen.aspx?Pname=8091245b-72fe-45d2-b382-74cec1b45233.pdf" target="_blank" class="company-link">
+                            <i class="fas fa-file-pdf"></i> View Announcement
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="metrics-grid">
+                <div class="metric-item">
+                    <div class="metric-label">Market Cap</div>
+                    <div class="metric-value">₹7,181.0 Cr</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">P/E Ratio</div>
+                    <div class="metric-value">
+                        <span class="badge badge-warning">15.7</span>
+                    </div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Sales</div>
+                    <div class="metric-value">₹4,917.0 Cr</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">OPM 5Year</div>
+                    <div class="metric-value">10.9%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Promoter Holding</div>
+                    <div class="metric-value">68.7%</div>
+                </div>
+            </div>
+            
+            <div class="summary-section"><h5><i class="fas fa-info-circle text-info"></i> Summary</h5><p class="summary-text">The announcement is Transport Corporation of India Limited’s Business Responsibility and Sustainability Report (BRSR) for FY 2025–26. It details the company’s ESG policies, governance, sustainability initiatives (decarbonisation, multimodal logistics, alternate fuels, renewable energy, waste and water management), employee and stakeholder data, health & safety, human rights, and environmental metrics including Scope 1/2/3 emissions and targets (carbon neutrality by FY2040). It also describes collaborations (IIM Bangalore Supply Chain Sustainability Lab), emissions measurement tools, and various operational and social responsibility programs.</p></div>
+        </div>
+        
+        <div class="announcement-card">
+            <div class="company-header">
+                <div>
+                    <h2 class="company-name">South West Pinn.</h2>
+                    <div class="d-flex gap-4 flex-wrap mt-2">
+                        <a href="https://www.screener.in/company/SOUTHWEST/" target="_blank" class="company-link">
+                            <i class="fas fa-external-link-alt"></i> View on Screener
+                        </a>
+                        <a href="https://www.bseindia.com/stockinfo/AnnPdfOpen.aspx?Pname=a378a25c-a98a-4450-b24f-59b577b1fc3c.pdf" target="_blank" class="company-link">
+                            <i class="fas fa-file-pdf"></i> View Announcement
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="metrics-grid">
+                <div class="metric-item">
+                    <div class="metric-label">Market Cap</div>
+                    <div class="metric-value">₹655.0 Cr</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">P/E Ratio</div>
+                    <div class="metric-value">
+                        <span class="badge badge-warning">21.3</span>
+                    </div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Sales</div>
+                    <div class="metric-value">₹243.0 Cr</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">OPM 5Year</div>
+                    <div class="metric-value">20.3%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Promoter Holding</div>
+                    <div class="metric-value">68.8%</div>
+                </div>
+            </div>
+            
+            <div class="summary-section"><h5><i class="fas fa-info-circle text-info"></i> Summary</h5><p class="summary-text">South West Pinnacle Exploration Ltd. received a Letter of Award from CMPDI (a Coal India subsidiary) to provide detailed coal exploration services in Jharkhand. The contract value is approximately INR 5.89 crore (including GST) and the work must be completed within 180 days, expected to contribute revenue in the current fiscal year and strengthen the company’s order book.</p></div>
+        </div>
+        
+        <div class="announcement-card">
+            <div class="company-header">
+                <div>
+                    <h2 class="company-name">VST Industries</h2>
+                    <div class="d-flex gap-4 flex-wrap mt-2">
+                        <a href="https://www.screener.in/company/VSTIND/" target="_blank" class="company-link">
+                            <i class="fas fa-external-link-alt"></i> View on Screener
+                        </a>
+                        <a href="https://www.bseindia.com/stockinfo/AnnPdfOpen.aspx?Pname=e8d48a2c-86d3-43b1-8856-9ebb737366ab.pdf" target="_blank" class="company-link">
+                            <i class="fas fa-file-pdf"></i> View Announcement
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="metrics-grid">
+                <div class="metric-item">
+                    <div class="metric-label">Market Cap</div>
+                    <div class="metric-value">₹4,559.0 Cr</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">P/E Ratio</div>
+                    <div class="metric-value">
+                        <span class="badge badge-warning">15.6</span>
+                    </div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Sales</div>
+                    <div class="metric-value">₹1,465.0 Cr</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">OPM 5Year</div>
+                    <div class="metric-value">27.8%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Promoter Holding</div>
+                    <div class="metric-value">32.2%</div>
+                </div>
+            </div>
+            
+            <div class="summary-section"><h5><i class="fas fa-info-circle text-info"></i> Summary</h5><p class="summary-text">This is VST Industries Limited’s Annual Report / stock exchange filing announcing publication of the Annual Report 2025-26, including the Report & Accounts, Notice of 95th AGM (29 July 2026), and Business Responsibility & Sustainability Report (BRSR) uploaded on the company website. It covers financials (Revenue ₹2,04,575L, PAT ₹29,225L), dividend recommendation (₹12 per share), MD & CEO appointment (Piyush Srivastava effective 2 Mar 2026), ESG/CSR activities and targets, manufacturing/leaf operations, strategy, board/committee details and statutory disclosures.</p></div>
+        </div>
+        
+        <div class="announcement-card">
+            <div class="company-header">
+                <div>
+                    <h2 class="company-name">Novus Loyalty</h2>
+                    <div class="d-flex gap-4 flex-wrap mt-2">
+                        <a href="https://www.screener.in/company/544735/" target="_blank" class="company-link">
+                            <i class="fas fa-external-link-alt"></i> View on Screener
+                        </a>
+                        <a href="https://www.bseindia.com/stockinfo/AnnPdfOpen.aspx?Pname=47399de1-7a66-4aef-aaa6-eb26717ce23f.pdf" target="_blank" class="company-link">
+                            <i class="fas fa-file-pdf"></i> View Announcement
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="metrics-grid">
+                <div class="metric-item">
+                    <div class="metric-label">Market Cap</div>
+                    <div class="metric-value">₹214.0 Cr</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">P/E Ratio</div>
+                    <div class="metric-value">
+                        <span class="badge badge-warning">23.0</span>
+                    </div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Sales</div>
+                    <div class="metric-value">₹127.0 Cr</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">OPM 5Year</div>
+                    <div class="metric-value">%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Promoter Holding</div>
+                    <div class="metric-value">70.1%</div>
+                </div>
+            </div>
+            
+            <div class="summary-section"><h5><i class="fas fa-info-circle text-info"></i> Summary</h5><p class="summary-text">Novus Loyalty is developing NoCXy AI, a proprietary AI decision engine to transform enterprise loyalty by adding behavioural analytics, hyper-personalisation, predictive intelligence, intelligent automation and business insights. Built using IPO proceeds, the platform will analyse multi-touchpoint customer data, predict behaviour, automate personalised engagement, and include 12 specialized AI agents covering member experience, merchant/partner functions, and platform intelligence. The initiative is positioned as a product innovation to improve campaign effectiveness, retention, fraud prevention, and scalability across banks, fintechs, retailers and large enterprises.</p></div>
+        </div>
+        
+        <div class="announcement-card">
+            <div class="company-header">
+                <div>
+                    <h2 class="company-name">Transport Corp.</h2>
+                    <div class="d-flex gap-4 flex-wrap mt-2">
+                        <a href="https://www.screener.in/company/TCI/consolidated/" target="_blank" class="company-link">
+                            <i class="fas fa-external-link-alt"></i> View on Screener
+                        </a>
+                        <a href="https://www.bseindia.com/stockinfo/AnnPdfOpen.aspx?Pname=415ace50-56b5-47b5-b08a-283a21e3b624.pdf" target="_blank" class="company-link">
+                            <i class="fas fa-file-pdf"></i> View Announcement
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="metrics-grid">
+                <div class="metric-item">
+                    <div class="metric-label">Market Cap</div>
+                    <div class="metric-value">₹7,181.0 Cr</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">P/E Ratio</div>
+                    <div class="metric-value">
+                        <span class="badge badge-warning">15.7</span>
+                    </div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Sales</div>
+                    <div class="metric-value">₹4,917.0 Cr</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">OPM 5Year</div>
+                    <div class="metric-value">10.9%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Promoter Holding</div>
+                    <div class="metric-value">68.7%</div>
+                </div>
+            </div>
+            
+            <div class="summary-section"><h5><i class="fas fa-info-circle text-info"></i> Summary</h5><p class="summary-text">The announcement is an Annual Report and AGM notice for Transport Corporation of India Ltd (TCI) dated July 06, 2026, covering FY25–26 and notice of 31st AGM on July 30, 2026 (VC/OAVM). It details annual report dispatch, e‑voting schedule, AGM logistics, financial statements, business overview, sustainability, technology/innovation initiatives (digital integration, AI control towers, TEMT ISO certification, MILKRUN, EV/CNG adoption, partnerships including Flying Whales), capex plans (coastal vessels, rail rakes), and governance information.</p></div>
+        </div>
+        
+        <div class="announcement-card">
+            <div class="company-header">
+                <div>
+                    <h2 class="company-name">Accord Transformer</h2>
+                    <div class="d-flex gap-4 flex-wrap mt-2">
+                        <a href="https://www.screener.in/company/544710/" target="_blank" class="company-link">
+                            <i class="fas fa-external-link-alt"></i> View on Screener
+                        </a>
+                        <a href="https://www.bseindia.com/stockinfo/AnnPdfOpen.aspx?Pname=beaca1f3-81a8-4974-9ee1-c879f2c6e78a.pdf" target="_blank" class="company-link">
+                            <i class="fas fa-file-pdf"></i> View Announcement
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="metrics-grid">
+                <div class="metric-item">
+                    <div class="metric-label">Market Cap</div>
+                    <div class="metric-value">₹117.0 Cr</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">P/E Ratio</div>
+                    <div class="metric-value">
+                        <span class="badge badge-danger">26.0</span>
+                    </div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Sales</div>
+                    <div class="metric-value">₹70.1 Cr</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">OPM 5Year</div>
+                    <div class="metric-value">7.9%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Promoter Holding</div>
+                    <div class="metric-value">62.0%</div>
+                </div>
+            </div>
+            
+            <div class="summary-section"><h5><i class="fas fa-info-circle text-info"></i> Summary</h5><p class="summary-text">Accord Transformer & Switchgear Limited received vendor approval from Aditya Birla Renewables to supply transformers for its renewable energy projects. The approval followed evaluation of Accord’s manufacturing, quality systems, and technical capabilities, enabling participation in utility-scale solar, wind, and hybrid projects and expanding the company’s presence in India’s renewable energy sector.</p></div>
+        </div>
+        
+        <div class="announcement-card">
+            <div class="company-header">
+                <div>
+                    <h2 class="company-name">GK Energy</h2>
+                    <div class="d-flex gap-4 flex-wrap mt-2">
+                        <a href="https://www.screener.in/company/GKENERGY/" target="_blank" class="company-link">
+                            <i class="fas fa-external-link-alt"></i> View on Screener
+                        </a>
+                        <a href="https://www.bseindia.com/stockinfo/AnnPdfOpen.aspx?Pname=85e31e35-c11c-4ae5-aeff-4019ed22b3f2.pdf" target="_blank" class="company-link">
+                            <i class="fas fa-file-pdf"></i> View Announcement
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="metrics-grid">
+                <div class="metric-item">
+                    <div class="metric-label">Market Cap</div>
+                    <div class="metric-value">₹2,899.0 Cr</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">P/E Ratio</div>
+                    <div class="metric-value">
+                        <span class="badge badge-success">14.4</span>
+                    </div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Sales</div>
+                    <div class="metric-value">₹1,533.0 Cr</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">OPM 5Year</div>
+                    <div class="metric-value">17.1%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Promoter Holding</div>
+                    <div class="metric-value">79.2%</div>
+                </div>
+            </div>
+            
+            <div class="summary-section"><h5><i class="fas fa-info-circle text-info"></i> Summary</h5><p class="summary-text">GK Energy won a ₹235.92 crore MSEDCL order to deploy 10,000 off‑grid DC solar-powered water pumping systems across Maharashtra under the Magel Tyala Saur Krushi Pump Yojana. The scope covers design, manufacture, supply, transport, installation, testing and commissioning of 3, 5 and 7.5 HP pumps, to be executed within 60 days. This reinforces GK Energy’s role in scaling decentralized renewable infrastructure, supporting agricultural irrigation, and furthers its ongoing work installing solar systems across rural India.</p></div>
+        </div>
+        
+        <div class="announcement-card">
+            <div class="company-header">
+                <div>
+                    <h2 class="company-name">Sugs Lloyd</h2>
+                    <div class="d-flex gap-4 flex-wrap mt-2">
+                        <a href="https://www.screener.in/company/544501/" target="_blank" class="company-link">
+                            <i class="fas fa-external-link-alt"></i> View on Screener
+                        </a>
+                        <a href="https://www.bseindia.com/stockinfo/AnnPdfOpen.aspx?Pname=00f80cfe-e9ec-4398-969a-cbc5e595b641.pdf" target="_blank" class="company-link">
+                            <i class="fas fa-file-pdf"></i> View Announcement
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="metrics-grid">
+                <div class="metric-item">
+                    <div class="metric-label">Market Cap</div>
+                    <div class="metric-value">₹303.0 Cr</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">P/E Ratio</div>
+                    <div class="metric-value">
+                        <span class="badge badge-success">10.6</span>
+                    </div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Sales</div>
+                    <div class="metric-value">₹301.0 Cr</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">OPM 5Year</div>
+                    <div class="metric-value">14.1%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Promoter Holding</div>
+                    <div class="metric-value">70.3%</div>
+                </div>
+            </div>
+            
+            <div class="summary-section"><h5><i class="fas fa-info-circle text-info"></i> Summary</h5><p class="summary-text">SUGS Lloyd Limited won a ₹3.37 crore order from Madhya Pradesh Paschim Kshetra Vidyut Vitaran Company for design, supply, installation, testing and commissioning of 11 kV and 33 kV Fault Passage Indicators integrated with SCADA-DMS/ADMS at Indore, including 5-year AMC and communications. The 70-day project aims to improve fault detection, reduce outages and enhance grid visibility. The release also notes other recent orders (rooftop solar and similar FPI projects) and highlights the company’s strong position in smart grid and power T&D solutions.</p></div>
+        </div>
+        
+        <div class="announcement-card">
+            <div class="company-header">
+                <div>
+                    <h2 class="company-name">Raymond</h2>
+                    <div class="d-flex gap-4 flex-wrap mt-2">
+                        <a href="https://www.screener.in/company/RAYMOND/consolidated/" target="_blank" class="company-link">
+                            <i class="fas fa-external-link-alt"></i> View on Screener
+                        </a>
+                        <a href="https://www.bseindia.com/stockinfo/AnnPdfOpen.aspx?Pname=c8578815-f2c3-4d2d-a21a-43249227fb22.pdf" target="_blank" class="company-link">
+                            <i class="fas fa-file-pdf"></i> View Announcement
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="metrics-grid">
+                <div class="metric-item">
+                    <div class="metric-label">Market Cap</div>
+                    <div class="metric-value">₹4,152.0 Cr</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">P/E Ratio</div>
+                    <div class="metric-value">
+                        <span class="badge badge-success">0.75</span>
+                    </div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Sales</div>
+                    <div class="metric-value">₹2,212.0 Cr</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">OPM 5Year</div>
+                    <div class="metric-value">11.7%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Promoter Holding</div>
+                    <div class="metric-value">48.9%</div>
+                </div>
+            </div>
+            
+            <div class="summary-section"><h5><i class="fas fa-info-circle text-info"></i> Summary</h5><p class="summary-text">Raymond Limited appointed Bhanu Prakash Srivastava as CEO – Defence to lead its strategic expansion into advanced defence technologies, electronics, systems integration and aerospace. The appointment leverages his nearly four decades at BEL and strong R&D, AI incubation and product-development experience to drive indigenous defence manufacturing, technology-led solutions, strategic partnerships and long-term innovation in Raymond’s engineering and defence businesses.</p></div>
+        </div>
+        
+        <div class="announcement-card">
+            <div class="company-header">
+                <div>
+                    <h2 class="company-name">Vikram Solar</h2>
+                    <div class="d-flex gap-4 flex-wrap mt-2">
+                        <a href="https://www.screener.in/company/VIKRAMSOLR/consolidated/" target="_blank" class="company-link">
+                            <i class="fas fa-external-link-alt"></i> View on Screener
+                        </a>
+                        <a href="https://www.bseindia.com/stockinfo/AnnPdfOpen.aspx?Pname=c80251a9-967d-4d8b-87a2-e8aa8eeb2486.pdf" target="_blank" class="company-link">
+                            <i class="fas fa-file-pdf"></i> View Announcement
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="metrics-grid">
+                <div class="metric-item">
+                    <div class="metric-label">Market Cap</div>
+                    <div class="metric-value">₹6,732.0 Cr</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">P/E Ratio</div>
+                    <div class="metric-value">
+                        <span class="badge badge-success">14.2</span>
+                    </div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Sales</div>
+                    <div class="metric-value">₹4,802.0 Cr</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">OPM 5Year</div>
+                    <div class="metric-value">14.1%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Promoter Holding</div>
+                    <div class="metric-value">63.0%</div>
+                </div>
+            </div>
+            
+            <div class="summary-section"><h5><i class="fas fa-info-circle text-info"></i> Summary</h5><p class="summary-text">Vikram Solar commissioned its new 6 lakh sq. ft. mega-module manufacturing plant in Gangaikondan, Tamil Nadu, and rolled out the first Hypersol N-Type TOPCon G12R modules (615–640 Wp, up to 23.69% efficiency). The highly automated smart factory features real-time production tracking, automated inspections, traceability, and digital manufacturing to improve quality and scale. The site is planned to be vertically integrated over time with cell, wafer, and ingot production, supporting Vikram Solar’s roadmap to add significant cell and wafer/ingot capacity through FY30 and strengthen India’s domestic solar manufacturing ecosystem.</p></div>
+        </div>
+        
+        <div class="announcement-card">
+            <div class="company-header">
+                <div>
+                    <h2 class="company-name">Fermenta Biotec.</h2>
+                    <div class="d-flex gap-4 flex-wrap mt-2">
+                        <a href="https://www.screener.in/company/FERMENTA/consolidated/" target="_blank" class="company-link">
+                            <i class="fas fa-external-link-alt"></i> View on Screener
+                        </a>
+                        <a href="https://www.bseindia.com/stockinfo/AnnPdfOpen.aspx?Pname=cd3c0294-510c-4c42-a686-1f97422fe6f7.pdf" target="_blank" class="company-link">
+                            <i class="fas fa-file-pdf"></i> View Announcement
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="metrics-grid">
+                <div class="metric-item">
+                    <div class="metric-label">Market Cap</div>
+                    <div class="metric-value">₹1,153.0 Cr</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">P/E Ratio</div>
+                    <div class="metric-value">
+                        <span class="badge badge-warning">17.3</span>
+                    </div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Sales</div>
+                    <div class="metric-value">₹525.0 Cr</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">OPM 5Year</div>
+                    <div class="metric-value">15.6%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Promoter Holding</div>
+                    <div class="metric-value">64.1%</div>
+                </div>
+            </div>
+            
+            <div class="summary-section"><h5><i class="fas fa-info-circle text-info"></i> Summary</h5><p class="summary-text">Fermenta Biotech’s plant-source Vitamin D3 (VITADEE Green®) has received FSSAI approval for use in health supplements, nutraceuticals and food products. The company highlights its India-developed, patented, scalable and sustainable process, enabling domestic fortification options and addressing widespread Vitamin D deficiency. The ingredient offers a plant-based D3 alternative for vegetarian consumers and supports Make in India and national nutrition efforts.</p></div>
+        </div>
+        
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        let cards = [];
+        let availableReports = [];
+        let currentReportDate = null;
+        let isLoadingReports = false;
+        const githubApiBase = 'https://api.github.com/repos/eldhoz515/stock-analysis/contents/concalls';
+        const githubPagesBase = 'https://eldhoz515.github.io/stock-analysis/concalls';
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            cards = Array.from(document.querySelectorAll('.hero-section, .company-card, .announcement-card'));
+            initializeNavigation();
+        });
+        
+        function getCurrentVisibleCardIndex() {
+            if (cards.length === 0) return -1;
+            
+            const viewportTop = window.scrollY;
+            const viewportCenter = viewportTop + (window.innerHeight / 2);
+            
+            // Find the card closest to the center of the viewport
+            let closestIndex = 0;
+            let closestDistance = Infinity;
+            
+            cards.forEach((card, index) => {
+                const rect = card.getBoundingClientRect();
+                const cardTop = rect.top + window.scrollY;
+                const cardCenter = cardTop + (rect.height / 2);
+                const distance = Math.abs(cardCenter - viewportCenter);
+                
+                if (distance < closestDistance) {
+                    closestDistance = distance;
+                    closestIndex = index;
+                }
+            });
+            
+            return closestIndex;
+        }
+        
+        function focusCard(index) {
+            if (cards.length === 0) return;
+            
+            // Handle boundary conditions
+            if (index < 0) index = cards.length - 1;
+            if (index >= cards.length) index = 0;
+            
+            if (cards[index]) {
+                cards[index].scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }
+        
+        async function initializeNavigation() {
+            // Extract current report date from URL
+            const currentFilename = window.location.pathname.split('/').pop();
+            const dateMatch = currentFilename.match(/(\d{4}-\d{2}-\d{2})_(\d{4}-\d{2}-\d{2})\.html/);
+            
+            if (dateMatch) {
+                currentReportDate = dateMatch[1]; // Use start date
+                await loadAvailableReports();
+            }
+        }
+        
+        async function loadAvailableReports() {
+            if (isLoadingReports) return;
+            isLoadingReports = true;
+            
+            try {
+                const response = await fetch(githubApiBase);
+                const files = await response.json();
+                
+                if (Array.isArray(files)) {
+                    const reports = [];
+                    files.forEach(file => {
+                        const match = file.name.match(/(\d{4}-\d{2}-\d{2})_(\d{4}-\d{2}-\d{2})\.html/);
+                        if (match) {
+                            reports.push({
+                                startDate: match[1],
+                                endDate: match[2],
+                                filename: file.name,
+                                url: `${githubPagesBase}/${file.name}`
+                            });
+                        }
+                    });
+                    
+                    // Sort by start date
+                    reports.sort((a, b) => a.startDate.localeCompare(b.startDate));
+                    availableReports = reports;
+                }
+            } catch (error) {
+                console.error('Error loading reports:', error);
+            } finally {
+                isLoadingReports = false;
+            }
+        }
+        
+        function navigateToReport(direction) {
+            if (!currentReportDate || availableReports.length === 0) return;
+            
+            const currentIndex = availableReports.findIndex(r => r.startDate === currentReportDate);
+            if (currentIndex === -1) return;
+            
+            let targetIndex;
+            if (direction === 'prev') {
+                targetIndex = currentIndex - 1;
+                if (targetIndex < 0) targetIndex = availableReports.length - 1; // Wrap to last
+            } else {
+                targetIndex = currentIndex + 1;
+                if (targetIndex >= availableReports.length) targetIndex = 0; // Wrap to first
+            }
+            
+            const targetReport = availableReports[targetIndex];
+            if (targetReport) {
+                window.location.href = targetReport.url;
+            }
+        }
+        
+        document.addEventListener('keydown', function(e) {
+            if (['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) return;
+            
+            // Check if Shift key is pressed for date navigation
+            if (e.shiftKey) {
+                if (e.key === 'ArrowLeft') {
+                    e.preventDefault();
+                    navigateToReport('prev');
+                    return;
+                } else if (e.key === 'ArrowRight') {
+                    e.preventDefault();
+                    navigateToReport('next');
+                    return;
+                }
+            }
+            
+            // Default card navigation (without Shift)
+            const currentIndex = getCurrentVisibleCardIndex();
+            
+            if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                focusCard(currentIndex - 1);
+            } else if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                focusCard(currentIndex + 1);
+            } else if (e.key === 'ArrowLeft') {
+                e.preventDefault();
+                focusCard(currentIndex - 1);
+            } else if (e.key === 'ArrowRight') {
+                e.preventDefault();
+                focusCard(currentIndex + 1);
+            } else if (e.key === 'Home') {
+                e.preventDefault();
+                focusCard(0);
+            } else if (e.key === 'End') {
+                e.preventDefault();
+                focusCard(cards.length - 1);
+            }
+        });
+        
+        // Optional: Handle clicks for immediate scrolling
+        document.addEventListener('click', function(e) {
+            const clickedCard = e.target.closest('.company-card, .announcement-card');
+            if (clickedCard) {
+                clickedCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        });
+    </script>
+</body>
+</html>
