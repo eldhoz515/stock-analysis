@@ -1,0 +1,2324 @@
+
+<!DOCTYPE html>
+<html lang="en" style="background:black;">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock Analysis Report</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #ffffff;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --danger-color: #ef4444;
+            --dark-bg: #000000;
+            --dark-surface: #0a0a0a;
+            --dark-border: #222222;
+            --dark-text: #d4d4d4;
+            --dark-text-muted: #999999;
+        }
+        
+        * {
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: #000000;
+            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            color: var(--dark-text);
+            margin: 0;
+            padding: 0;
+        }
+        
+        .main-container {
+            background: #000000;
+            margin: 0 auto;
+            padding: 40px;
+            max-width: 1400px;
+        }
+        
+        .hero-section {
+            text-align: center;
+            margin-bottom: 50px;
+            padding: 40px 0;
+            background: #0a0a0a;
+            border-radius: 20px;
+            border: 1px solid var(--dark-border);
+            scroll-margin: 20px;
+        }
+        
+        .hero-title {
+            color: #d4d4d4;
+            font-size: 3.5rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+        
+        .section-divider {
+            background: #0a0a0a;
+            border-radius: 20px;
+            padding: 30px;
+            margin: 50px 0;
+            text-align: center;
+            border: 1px solid var(--dark-border);
+        }
+        
+        .section-title {
+            color: #d4d4d4;
+            font-size: 2.5rem;
+            font-weight: 600;
+            margin: 0;
+        }
+        
+        .home-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #1a1a1a;
+            color: #d4d4d4;
+            text-decoration: none;
+            font-weight: 600;
+            padding: 12px 24px;
+            border-radius: 12px;
+            border: 1px solid var(--dark-border);
+            transition: all 0.3s ease;
+            margin-top: 15px;
+        }
+        
+        .home-button:hover {
+            background: #222222;
+            color: #d4d4d4;
+            transform: translateY(-2px);
+        }
+        
+        .company-card, .announcement-card {
+            background: linear-gradient(135deg, #0a0a0a 0%, #141414 100%);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 25px;
+            border: 1px solid var(--dark-border);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            scroll-margin: 10px;
+        }
+        
+        .announcement-card {
+            border-left: 5px solid #444444;
+        }
+        
+        .company-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .company-name {
+            font-size: 2rem;
+            font-weight: 600;
+            color: #d4d4d4;
+            margin: 0;
+        }
+        
+        .announcement-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: var(--dark-text);
+            margin: 10px 0;
+            line-height: 1.4;
+        }
+        
+        .price-change {
+            font-size: 1.6rem;
+            font-weight: 600;
+            padding: 12px 20px;
+            border-radius: 30px;
+            color: #d4d4d4;
+            border: 1px solid var(--dark-border);
+            white-space: nowrap;
+        }
+        
+        .announcement-date {
+            background: #1a1a1a;
+            color: #d4d4d4;
+            font-size: 0.9rem;
+            font-weight: 600;
+            padding: 8px 16px;
+            border-radius: 20px;
+            border: 1px solid var(--dark-border);
+            white-space: nowrap;
+        }
+        
+        .pdf-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #1a1a1a;
+            color: #d4d4d4;
+            text-decoration: none;
+            font-weight: 600;
+            padding: 12px 20px;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            border: 1px solid var(--dark-border);
+            margin-top: 15px;
+        }
+        
+        .pdf-link:hover {
+            background: #222222;
+            color: #d4d4d4;
+            transform: translateY(-2px);
+        }
+        
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+            margin: 25px 0;
+        }
+        
+        .metric-item {
+            background: var(--dark-surface);
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            border: 1px solid var(--dark-border);
+            transition: all 0.3s ease;
+        }
+        
+        .metric-label {
+            font-size: 0.85rem;
+            color: var(--dark-text-muted);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+        
+        .metric-value {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--dark-text);
+        }
+        
+        .summary-section {
+            background: var(--dark-surface);
+            padding: 25px;
+            border-radius: 15px;
+            border-left: 5px solid var(--primary-color);
+            margin-top: 25px;
+        }
+        
+        .summary-text {
+            color: var(--dark-text-muted);
+            line-height: 1.8;
+            font-size: 1.5rem;
+            margin-top: 15px;
+        }
+        
+        .badge-success-lg {
+            background: linear-gradient(135deg, #059669, #16a34a);
+        }
+        
+        .badge-success {
+            background: linear-gradient(135deg, #10b981, #34d399);
+        }
+        
+        .badge-warning {
+            background: linear-gradient(135deg, #d97706, #f59e0b);
+        }
+        
+        .badge-danger {
+            background: linear-gradient(135deg, #dc2626, #ef4444);
+        }
+        
+        .stats-banner {
+            background: #0a0a0a;
+            color: #d4d4d4;
+            padding: 35px;
+            border-radius: 20px;
+            margin-bottom: 40px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 25px;
+            border: 1px solid var(--dark-border);
+        }
+        
+        .stat-item {
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 600;
+            display: block;
+            color: #d4d4d4;
+        }
+        
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.8;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-top: 5px;
+        }
+        
+        .growth-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.95rem;
+            padding: 8px 16px;
+            border-radius: 20px;
+            background: #1a1a1a;
+            color: #10b981;
+            border: 1px solid var(--dark-border);
+            margin-bottom: 10px;
+        }
+        
+        .company-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: #d4d4d4;
+            text-decoration: none;
+            font-weight: 600;
+            padding: 12px 20px;
+            border-radius: 12px;
+            background: #1a1a1a;
+            border: 1px solid var(--dark-border);
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+        
+        .company-link:hover {
+            background: #222222;
+            color: #d4d4d4;
+            transform: translateY(-2px);
+        }
+        
+        .text-muted {
+            color: var(--dark-text-muted) !important;
+        }
+        
+        .lead {
+            color: var(--dark-text-muted);
+            font-size: 1.1rem;
+        }
+        
+        @media (max-width: 768px) {
+            .hero-title { font-size: 2.5rem; }
+            .section-title { font-size: 2rem; }
+            .company-header { flex-direction: column; gap: 15px; }
+            .metrics-grid { grid-template-columns: 1fr 1fr; }
+            .main-container { padding: 20px; margin: 10px; }
+            .stats-banner { grid-template-columns: 1fr 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <div class="hero-section">
+            <h1 class="hero-title">
+                <i class="fas fa-chart-line"></i> Stock Analysis Report
+            </h1>
+            <p class="lead text-muted">
+                <i class="far fa-calendar"></i> Generated for August 03, 2026
+            </p>
+            <a href="https://eldhoz515.github.io/stock-analysis/" class="home-button">
+                <i class="fas fa-home"></i> Back to Calendar
+            </a>
+        </div>
+        
+        <div class="stats-banner">
+            <div class="stat-item">
+                <span class="stat-number">24</span>
+                <div class="stat-label">Concalls Analyzed</div>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number">12</span>
+                <div class="stat-label">Announcements</div>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number">4</span>
+                <div class="stat-label">High Growth (>50%)</div>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number">740%</span>
+                <div class="stat-label">Highest Prediction</div>
+            </div>
+        </div>
+
+        <div class="section-divider">
+            <h2 class="section-title">
+                <i class="fas fa-microphone"></i> Concall Analysis
+            </h2>
+        </div>
+    
+        <div class="company-card">
+            <div class="company-header">
+                <div>
+                    <h2 class="company-name">Hubtown</h2>
+                    <div class="d-flex gap-2 flex-wrap mt-2">
+                        <a href="https://www.screener.in/company/HUBTOWN/consolidated/" target="_blank" class="company-link">
+                            <i class="fas fa-external-link-alt"></i> View on Screener
+                        </a>
+                    </div>
+                </div>
+                <div class="price-change badge-success-lg">
+                    <i class="fas fa-arrow-up"></i> 740.3%
+                </div>
+            </div>
+            
+            <div class="metrics-grid">
+                <div class="metric-item">
+                    <div class="metric-label">Market Cap</div>
+                    <div class="metric-value">₹2,708.0 Cr</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">P/E Ratio</div>
+                    <div class="metric-value">
+                        <span class="badge badge-danger">28.8</span>
+                    </div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Sales</div>
+                    <div class="metric-value">₹612.0 Cr</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">OPM</div>
+                    <div class="metric-value">13.6%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Promoter Holding</div>
+                    <div class="metric-value">33.2%</div>
+                </div>
+            </div>
+            
+            <div class="d-flex gap-2 mb-3">
+                <div class="growth-indicator">
+                    <i class="fas fa-chart-line"></i>
+                    <span>CAGR: 89.2% over 5 years</span>
+                </div>
+            </div>
+            
+            <div class="summary-section">
+                <h5><i class="fas fa-lightbulb text-warning"></i> AI Analysis Summary</h5>
+                <p class="summary-text">Hubtown aims to monetize a consolidated proforma pipeline (8.11 msf, INR 148.4bn total sale value) by delivering key projects—25 South, 25 Downtown, 25 West, Seasons/Chembur, Rising City—and launching forthcoming assets (25 Estates, Chalets, Breach Candy, Sunstream City), targeting strong FY27 growth through focused project deliveries, mergers to consolidate assets and simplify capital structure, deleveraging (net debt zero by FY31), pre-sales/collections (Q1 pre-sales ₹5,350mn, collections ₹3,201mn), institutional funding for completions, and disciplined execution/ESG-driven credibility.</p>
+            </div>
+        </div>
+    
+        <div class="company-card">
+            <div class="company-header">
+                <div>
+                    <h2 class="company-name">Fabtech Tech.</h2>
+                    <div class="d-flex gap-2 flex-wrap mt-2">
+                        <a href="https://www.screener.in/company/FABTECH/consolidated/" target="_blank" class="company-link">
+                            <i class="fas fa-external-link-alt"></i> View on Screener
+                        </a>
+                    </div>
+                </div>
+                <div class="price-change badge-success-lg">
+                    <i class="fas fa-arrow-up"></i> 112.1%
+                </div>
+            </div>
+            
+            <div class="metrics-grid">
+                <div class="metric-item">
+                    <div class="metric-label">Market Cap</div>
+                    <div class="metric-value">₹659.0 Cr</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">P/E Ratio</div>
+                    <div class="metric-value">
+                        <span class="badge badge-success">13.6</span>
+                    </div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Sales</div>
+                    <div class="metric-value">₹418.0 Cr</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">OPM</div>
+                    <div class="metric-value">11.7%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Promoter Holding</div>
+                    <div class="metric-value">68.9%</div>
+                </div>
+            </div>
+            
+            <div class="d-flex gap-2 mb-3">
+                <div class="growth-indicator">
+                    <i class="fas fa-chart-line"></i>
+                    <span>CAGR: 24.4% over 4 years</span>
+                </div>
+            </div>
+            
+            <div class="summary-section">
+                <h5><i class="fas fa-lightbulb text-warning"></i> AI Analysis Summary</h5>
+                <p class="summary-text">The company targets 20–25% organic revenue growth for FY27 (aiming for ~1000+ crore by 2030) and PAT of ~9–11% (9.5–10% guidance cited); it plans to achieve this via H2-weighted execution from a >₹900 crore order book and >₹3,800 crore hot pipeline, geographic diversification (Saudi expansion, Africa scale‑up, Morocco/Kenya wins), localization (majority‑owned Saudi entity, acquisitions in Saudi/Europe), margin preservation through better project mix and procurement, disciplined capital deployment (IPO funds), and improved working‑capital and procurement efficiencies.</p>
+            </div>
+        </div>
+    
+        <div class="company-card">
+            <div class="company-header">
+                <div>
+                    <h2 class="company-name">Satin Creditcare</h2>
+                    <div class="d-flex gap-2 flex-wrap mt-2">
+                        <a href="https://www.screener.in/company/SATIN/consolidated/" target="_blank" class="company-link">
+                            <i class="fas fa-external-link-alt"></i> View on Screener
+                        </a>
+                    </div>
+                </div>
+                <div class="price-change badge-success">
+                    <i class="fas fa-arrow-up"></i> 60.6%
+                </div>
+            </div>
+            
+            <div class="metrics-grid">
+                <div class="metric-item">
+                    <div class="metric-label">Market Cap</div>
+                    <div class="metric-value">₹2,552.0 Cr</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">P/E Ratio</div>
+                    <div class="metric-value">
+                        <span class="badge badge-success">6.23</span>
+                    </div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Sales</div>
+                    <div class="metric-value">₹3,209.0 Cr</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">OPM</div>
+                    <div class="metric-value">54.0%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Promoter Holding</div>
+                    <div class="metric-value">36.2%</div>
+                </div>
+            </div>
+            
+            <div class="d-flex gap-2 mb-3">
+                <div class="growth-indicator">
+                    <i class="fas fa-chart-line"></i>
+                    <span>CAGR: 0.0% over 0 years</span>
+                </div>
+            </div>
+            
+            <div class="summary-section">
+                <h5><i class="fas fa-lightbulb text-warning"></i> AI Analysis Summary</h5>
+                <p class="summary-text">Satin targets consolidated AUM of INR18,200–18,900 crore for FY27 (20–25% growth) and a long‑term INR32,000 crore AUM by 2030 with 30% from non‑microfinance; stand‑alone reported RoA guidance 3.5–4% and credit cost 3–3.5% for FY27. It plans to achieve this via branch expansion and higher disbursements, diversified subsidiaries (Satin Finserv, Housing, green finance, tech), stronger underwriting and buffers, improved operating efficiency (higher AUM per officer, lower cost‑to‑income), diversified funding (INR3,000 crore raised, DA limits, 77 lenders) and scaling subsidiaries to drive consolidated growth.</p>
+            </div>
+        </div>
+    
+        <div class="company-card">
+            <div class="company-header">
+                <div>
+                    <h2 class="company-name">J & K Bank</h2>
+                    <div class="d-flex gap-2 flex-wrap mt-2">
+                        <a href="https://www.screener.in/company/J&KBANK/consolidated/" target="_blank" class="company-link">
+                            <i class="fas fa-external-link-alt"></i> View on Screener
+                        </a>
+                    </div>
+                </div>
+                <div class="price-change badge-success">
+                    <i class="fas fa-arrow-up"></i> 50.1%
+                </div>
+            </div>
+            
+            <div class="metrics-grid">
+                <div class="metric-item">
+                    <div class="metric-label">Market Cap</div>
+                    <div class="metric-value">₹17,203.0 Cr</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">P/E Ratio</div>
+                    <div class="metric-value">
+                        <span class="badge badge-success">7.47</span>
+                    </div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Sales</div>
+                    <div class="metric-value">₹13,429.0 Cr</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">OPM</div>
+                    <div class="metric-value">65.9%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Promoter Holding</div>
+                    <div class="metric-value">59.4%</div>
+                </div>
+            </div>
+            
+            <div class="d-flex gap-2 mb-3">
+                <div class="growth-indicator">
+                    <i class="fas fa-chart-line"></i>
+                    <span>CAGR: 12.0% over 1 years</span>
+                </div>
+            </div>
+            
+            <div class="summary-section">
+                <h5><i class="fas fa-lightbulb text-warning"></i> AI Analysis Summary</h5>
+                <p class="summary-text">The bank reiterated FY27 guidance: credit growth ~12% (management expects 18–20%), deposit growth 10–12%, CASA ~45%, NIM ~3.5%, ROA ~1.25%+, ROE ~16%, and GNPA <2.25%. Management plans to achieve this via diversified growth—accelerating retail, agriculture and MSME lending (retail to provide ~55–60% of growth), expanding Rest‑of‑India presence and branches, regaining deposit market share and CASA through salary MOUs and liability initiatives, selectively reducing high‑cost bulk deposits, improving yields as low‑yield corporate book runs off, operational efficiency/contained opex, and planned capital raise/ECL buffers.</p>
+            </div>
+        </div>
+    
+        <div class="company-card">
+            <div class="company-header">
+                <div>
+                    <h2 class="company-name">Sambhv Steel</h2>
+                    <div class="d-flex gap-2 flex-wrap mt-2">
+                        <a href="https://www.screener.in/company/SAMBHV/" target="_blank" class="company-link">
+                            <i class="fas fa-external-link-alt"></i> View on Screener
+                        </a>
+                    </div>
+                </div>
+                <div class="price-change badge-warning">
+                    <i class="fas fa-arrow-up"></i> 40.2%
+                </div>
+            </div>
+            
+            <div class="metrics-grid">
+                <div class="metric-item">
+                    <div class="metric-label">Market Cap</div>
+                    <div class="metric-value">₹3,535.0 Cr</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">P/E Ratio</div>
+                    <div class="metric-value">
+                        <span class="badge badge-warning">21.2</span>
+                    </div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Sales</div>
+                    <div class="metric-value">₹2,587.0 Cr</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">OPM</div>
+                    <div class="metric-value">12.0%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Promoter Holding</div>
+                    <div class="metric-value">56.1%</div>
+                </div>
+            </div>
+            
+            <div class="d-flex gap-2 mb-3">
+                <div class="growth-indicator">
+                    <i class="fas fa-chart-line"></i>
+                    <span>CAGR: 24.4% over 5 years</span>
+                </div>
+            </div>
+            
+            <div class="summary-section">
+                <h5><i class="fas fa-lightbulb text-warning"></i> AI Analysis Summary</h5>
+                <p class="summary-text">The company targets finished-product capacity growth to ~2.03 MTPA (from 0.682 MTPA) over 4–5 years to drive revenue, with Phase‑I (0.36 MTPA stainless coils) due by Q4FY27; near‑term growth reflected in Q1FY27 revenue of INR 7,322 Mn (31% YoY) and FY26 revenue INR 24,132 Mn. It will achieve this via greenfield (Kesda, Kuthrel‑II) and brownfield expansions (ERW pipes/tubes DFT route), doubling CR coil capacity, ramping GP coils/pipes and SS products, adding captive power (25–30 MW) and rooftop solar to cut costs, widening distributor/dealer network and developing value‑added/custom products.</p>
+            </div>
+        </div>
+    
+        <div class="company-card">
+            <div class="company-header">
+                <div>
+                    <h2 class="company-name">Nucleus Soft.</h2>
+                    <div class="d-flex gap-2 flex-wrap mt-2">
+                        <a href="https://www.screener.in/company/NUCLEUS/consolidated/" target="_blank" class="company-link">
+                            <i class="fas fa-external-link-alt"></i> View on Screener
+                        </a>
+                    </div>
+                </div>
+                <div class="price-change badge-warning">
+                    <i class="fas fa-arrow-up"></i> 29.7%
+                </div>
+            </div>
+            
+            <div class="metrics-grid">
+                <div class="metric-item">
+                    <div class="metric-label">Market Cap</div>
+                    <div class="metric-value">₹1,833.0 Cr</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">P/E Ratio</div>
+                    <div class="metric-value">
+                        <span class="badge badge-warning">16.0</span>
+                    </div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Sales</div>
+                    <div class="metric-value">₹869.0 Cr</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">OPM</div>
+                    <div class="metric-value">19.3%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Promoter Holding</div>
+                    <div class="metric-value">73.6%</div>
+                </div>
+            </div>
+            
+            <div class="d-flex gap-2 mb-3">
+                <div class="growth-indicator">
+                    <i class="fas fa-chart-line"></i>
+                    <span>CAGR: 126.0% over 1 years</span>
+                </div>
+            </div>
+            
+            <div class="summary-section">
+                <h5><i class="fas fa-lightbulb text-warning"></i> AI Analysis Summary</h5>
+                <p class="summary-text">The transcript gives no explicit revenue targets; current Q1 consolidated revenue was INR 210.4 crore (6.4% QoQ, 3.4% YoY) and the company aims to grow by converting a strengthened order book (INR 1,244 crore, ~88% products) into revenue over time, expanding in India, Middle East, Southeast Asia and the U.S., investing in sales/marketing, product R&D (including AI and FinnOne Neo v9.0), pursuing higher‑margin deals, focusing on new logo wins and long‑term AMCs/subscription contracts, and controlling costs/productivity improvements via AI and talent investments.</p>
+            </div>
+        </div>
+    
+        <div class="company-card">
+            <div class="company-header">
+                <div>
+                    <h2 class="company-name">Sarda Energy</h2>
+                    <div class="d-flex gap-2 flex-wrap mt-2">
+                        <a href="https://www.screener.in/company/SARDAEN/consolidated/" target="_blank" class="company-link">
+                            <i class="fas fa-external-link-alt"></i> View on Screener
+                        </a>
+                    </div>
+                </div>
+                <div class="price-change badge-warning">
+                    <i class="fas fa-arrow-up"></i> 24.4%
+                </div>
+            </div>
+            
+            <div class="metrics-grid">
+                <div class="metric-item">
+                    <div class="metric-label">Market Cap</div>
+                    <div class="metric-value">₹18,206.0 Cr</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">P/E Ratio</div>
+                    <div class="metric-value">
+                        <span class="badge badge-warning">16.2</span>
+                    </div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Sales</div>
+                    <div class="metric-value">₹5,665.0 Cr</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">OPM</div>
+                    <div class="metric-value">27.9%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Promoter Holding</div>
+                    <div class="metric-value">73.2%</div>
+                </div>
+            </div>
+            
+            <div class="d-flex gap-2 mb-3">
+                <div class="growth-indicator">
+                    <i class="fas fa-chart-line"></i>
+                    <span>CAGR: 18.9% over 4 years</span>
+                </div>
+            </div>
+            
+            <div class="summary-section">
+                <h5><i class="fas fa-lightbulb text-warning"></i> AI Analysis Summary</h5>
+                <p class="summary-text">SEML targets doubling EBITDA and doubling energy capacity and quadrupling mining capacity by FY30 (energy to ~400 MW renewables + ~1.3 GW thermal mix; coal mining to ~7+ MTPA) to drive revenue/earnings growth; it will achieve this via Rs.10,000+ Cr capex focused on high‑return energy and mining assets, scaling SKS power, expanding renewables and captive coal integration, new mine development (including JV mines), operational excellence, disciplined project execution, enhanced governance, and capital optimisation to convert scale into higher margins and sustained cash generation.</p>
+            </div>
+        </div>
+    
+        <div class="company-card">
+            <div class="company-header">
+                <div>
+                    <h2 class="company-name">Patel Integrated</h2>
+                    <div class="d-flex gap-2 flex-wrap mt-2">
+                        <a href="https://www.screener.in/company/PATINTLOG/" target="_blank" class="company-link">
+                            <i class="fas fa-external-link-alt"></i> View on Screener
+                        </a>
+                    </div>
+                </div>
+                <div class="price-change badge-warning">
+                    <i class="fas fa-arrow-up"></i> 23.7%
+                </div>
+            </div>
+            
+            <div class="metrics-grid">
+                <div class="metric-item">
+                    <div class="metric-label">Market Cap</div>
+                    <div class="metric-value">₹98.1 Cr</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">P/E Ratio</div>
+                    <div class="metric-value">
+                        <span class="badge badge-success">9.37</span>
+                    </div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Sales</div>
+                    <div class="metric-value">₹393.0 Cr</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">OPM</div>
+                    <div class="metric-value">3.1%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Promoter Holding</div>
+                    <div class="metric-value">36.2%</div>
+                </div>
+            </div>
+            
+            <div class="d-flex gap-2 mb-3">
+                <div class="growth-indicator">
+                    <i class="fas fa-chart-line"></i>
+                    <span>CAGR: 15.5% over 1 years</span>
+                </div>
+            </div>
+            
+            <div class="summary-section">
+                <h5><i class="fas fa-lightbulb text-warning"></i> AI Analysis Summary</h5>
+                <p class="summary-text">The presentation targets revenue growth from INR 2,783 Mn (FY26) toward higher quarters (Q1‑FY27 revenue INR 1,134 Mn, a 45.5% YoY rise) and aims to boost cargo tonnage and domestic airfreight share via expanding passenger-flight cargo services, enlarging warehousing (200k+ sq ft and new hubs), tech-driven track‑&‑trace/POD/cloud systems, deeper e‑commerce and pharma client penetration, more airline tie‑ups, UDAN/regional route leverage, and continued geographic/warehouse expansion to drive consistent top‑line growth.</p>
+            </div>
+        </div>
+    
+        <div class="company-card">
+            <div class="company-header">
+                <div>
+                    <h2 class="company-name">Vishnu Chemicals</h2>
+                    <div class="d-flex gap-2 flex-wrap mt-2">
+                        <a href="https://www.screener.in/company/VISHNU/consolidated/" target="_blank" class="company-link">
+                            <i class="fas fa-external-link-alt"></i> View on Screener
+                        </a>
+                    </div>
+                </div>
+                <div class="price-change badge-danger">
+                    <i class="fas fa-arrow-up"></i> -7.9%
+                </div>
+            </div>
+            
+            <div class="metrics-grid">
+                <div class="metric-item">
+                    <div class="metric-label">Market Cap</div>
+                    <div class="metric-value">₹4,032.0 Cr</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">P/E Ratio</div>
+                    <div class="metric-value">
+                        <span class="badge badge-danger">26.9</span>
+                    </div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Sales</div>
+                    <div class="metric-value">₹1,696.0 Cr</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">OPM</div>
+                    <div class="metric-value">16.0%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Promoter Holding</div>
+                    <div class="metric-value">69.2%</div>
+                </div>
+            </div>
+            
+            <div class="d-flex gap-2 mb-3">
+                <div class="growth-indicator">
+                    <i class="fas fa-chart-line"></i>
+                    <span>CAGR: 20.0% over 5 years</span>
+                </div>
+            </div>
+            
+            <div class="summary-section">
+                <h5><i class="fas fa-lightbulb text-warning"></i> AI Analysis Summary</h5>
+                <p class="summary-text">The company targets sustained medium‑term revenue growth (20%+ YoY indicated in Q1 FY27) by expanding value‑added chromium derivatives, completing backward integration (barium, strontium), ramping new specialty chemical capacities and South Africa operations, increasing solar capacity to cut power costs, leveraging multi‑site export reach (50+ countries) for a balanced domestic/export mix, and driving R&D, procurement and operational efficiencies to improve margins and scale.</p>
+            </div>
+        </div>
+    
+        <div class="company-card">
+            <div class="company-header">
+                <div>
+                    <h2 class="company-name">JM Financial</h2>
+                    <div class="d-flex gap-2 flex-wrap mt-2">
+                        <a href="https://www.screener.in/company/JMFINANCIL/consolidated/" target="_blank" class="company-link">
+                            <i class="fas fa-external-link-alt"></i> View on Screener
+                        </a>
+                    </div>
+                </div>
+                <div class="price-change badge-danger">
+                    <i class="fas fa-arrow-up"></i> -9.9%
+                </div>
+            </div>
+            
+            <div class="metrics-grid">
+                <div class="metric-item">
+                    <div class="metric-label">Market Cap</div>
+                    <div class="metric-value">₹11,565.0 Cr</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">P/E Ratio</div>
+                    <div class="metric-value">
+                        <span class="badge badge-success">11.0</span>
+                    </div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Sales</div>
+                    <div class="metric-value">₹4,180.0 Cr</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">OPM</div>
+                    <div class="metric-value">60.1%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Promoter Holding</div>
+                    <div class="metric-value">57.0%</div>
+                </div>
+            </div>
+            
+            <div class="d-flex gap-2 mb-3">
+                <div class="growth-indicator">
+                    <i class="fas fa-chart-line"></i>
+                    <span>CAGR: 0.0% over 0 years</span>
+                </div>
+            </div>
+            
+            <div class="summary-section">
+                <h5><i class="fas fa-lightbulb text-warning"></i> AI Analysis Summary</h5>
+                <p class="summary-text">JM Financial targets continued revenue and profit growth—Q1 FY27 net revenue Rs. 883 crore (up 13%) and pre‑provision operating profit Rs. 469 crore (up 21%)—driven by pipeline of ~Rs.150,000 crore IPOs, expanded corporate advisory/capital markets, scaling private markets (syndication/co‑investments and distressed credit resolutions), growing wealth & asset management AUM (recurring AUM Rs.33,394 crore; MF AAUM Rs.13,205 crore), and affordable home loans (AUM Rs.3,715 crore, disbursements +87% YoY); strategies include talent hiring, product expansion, syndication, de‑risking balance sheet and increasing client wallet share.</p>
+            </div>
+        </div>
+    
+        <div class="company-card">
+            <div class="company-header">
+                <div>
+                    <h2 class="company-name">Quess Corp</h2>
+                    <div class="d-flex gap-2 flex-wrap mt-2">
+                        <a href="https://www.screener.in/company/QUESS/consolidated/" target="_blank" class="company-link">
+                            <i class="fas fa-external-link-alt"></i> View on Screener
+                        </a>
+                    </div>
+                </div>
+                <div class="price-change badge-danger">
+                    <i class="fas fa-arrow-up"></i> -14.4%
+                </div>
+            </div>
+            
+            <div class="metrics-grid">
+                <div class="metric-item">
+                    <div class="metric-label">Market Cap</div>
+                    <div class="metric-value">₹5,154.0 Cr</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">P/E Ratio</div>
+                    <div class="metric-value">
+                        <span class="badge badge-warning">19.9</span>
+                    </div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Sales</div>
+                    <div class="metric-value">₹15,835.0 Cr</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">OPM</div>
+                    <div class="metric-value">2.7%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Promoter Holding</div>
+                    <div class="metric-value">56.8%</div>
+                </div>
+            </div>
+            
+            <div class="d-flex gap-2 mb-3">
+                <div class="growth-indicator">
+                    <i class="fas fa-chart-line"></i>
+                    <span>CAGR: 15.0% over 4 years</span>
+                </div>
+            </div>
+            
+            <div class="summary-section">
+                <h5><i class="fas fa-lightbulb text-warning"></i> AI Analysis Summary</h5>
+                <p class="summary-text">Quess targets 20–25% of revenues from higher‑margin, dollar‑linked businesses over the next 3–4 years (shifting mix toward Professional Staffing, international corridors and digital platforms) while continuing double‑digit growth in core General Staffing (Q1 revenue Rs. 4,182 crore; GS Rs. 3,596 crore, PS Rs. 252 crore, Overseas Rs. 333 crore). It will achieve this via scaling GCC and high‑value roles, building capital‑light partner-led talent corridors (Japan live; Europe/Israel/North America in progress), investing in AI/technology and sourcing, focusing on higher‑margin verticals (healthcare, MEP/civil, hospitality, finance, tech) and disciplined balance‑sheet/capital allocation.</p>
+            </div>
+        </div>
+    
+        <div class="company-card">
+            <div class="company-header">
+                <div>
+                    <h2 class="company-name">Orient Cement</h2>
+                    <div class="d-flex gap-2 flex-wrap mt-2">
+                        <a href="https://www.screener.in/company/ORIENTCEM/" target="_blank" class="company-link">
+                            <i class="fas fa-external-link-alt"></i> View on Screener
+                        </a>
+                    </div>
+                </div>
+                <div class="price-change badge-danger">
+                    <i class="fas fa-arrow-up"></i> -21.3%
+                </div>
+            </div>
+            
+            <div class="metrics-grid">
+                <div class="metric-item">
+                    <div class="metric-label">Market Cap</div>
+                    <div class="metric-value">₹2,868.0 Cr</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">P/E Ratio</div>
+                    <div class="metric-value">
+                        <span class="badge badge-success">13.5</span>
+                    </div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Sales</div>
+                    <div class="metric-value">₹2,531.0 Cr</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">OPM</div>
+                    <div class="metric-value">15.7%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Promoter Holding</div>
+                    <div class="metric-value">72.7%</div>
+                </div>
+            </div>
+            
+            <div class="d-flex gap-2 mb-3">
+                <div class="growth-indicator">
+                    <i class="fas fa-chart-line"></i>
+                    <span>CAGR: 8.0% over 1 years</span>
+                </div>
+            </div>
+            
+            <div class="summary-section">
+                <h5><i class="fas fa-lightbulb text-warning"></i> AI Analysis Summary</h5>
+                <p class="summary-text">Ambuja targets revenue growth via ~8% volume growth in FY27 (driven by higher trade share and premiumization) while expanding installed capacity to 119 Mt (adding ~10.2 Mt FY27) and improving realizations; cost cut targets (~INR250/ton incremental savings to hit ~INR4,250/ton) from RE power, WHRS, clinker/blend optimization, logistics, raw‑material sourcing and efficiency will boost margins and convert scale into higher revenue and profitability.</p>
+            </div>
+        </div>
+    
+        <div class="company-card">
+            <div class="company-header">
+                <div>
+                    <h2 class="company-name">Transport Corp.</h2>
+                    <div class="d-flex gap-2 flex-wrap mt-2">
+                        <a href="https://www.screener.in/company/TCI/consolidated/" target="_blank" class="company-link">
+                            <i class="fas fa-external-link-alt"></i> View on Screener
+                        </a>
+                    </div>
+                </div>
+                <div class="price-change badge-danger">
+                    <i class="fas fa-arrow-up"></i> -27.8%
+                </div>
+            </div>
+            
+            <div class="metrics-grid">
+                <div class="metric-item">
+                    <div class="metric-label">Market Cap</div>
+                    <div class="metric-value">₹7,028.0 Cr</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">P/E Ratio</div>
+                    <div class="metric-value">
+                        <span class="badge badge-warning">15.4</span>
+                    </div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Sales</div>
+                    <div class="metric-value">₹5,026.0 Cr</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">OPM</div>
+                    <div class="metric-value">10.9%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Promoter Holding</div>
+                    <div class="metric-value">68.7%</div>
+                </div>
+            </div>
+            
+            <div class="d-flex gap-2 mb-3">
+                <div class="growth-indicator">
+                    <i class="fas fa-chart-line"></i>
+                    <span>CAGR: 11.0% over 1 years</span>
+                </div>
+            </div>
+            
+            <div class="summary-section">
+                <h5><i class="fas fa-lightbulb text-warning"></i> AI Analysis Summary</h5>
+                <p class="summary-text">TCI targets revenue and margin growth of 10–12% for FY27, backed by diversified, multimodal services across Freight, Supply Chain and Seaways; continued investment in strategic assets (~₹1,670 Mn, largely internal accruals), network expansion (new branches, yards, rakes, vessels), technology-driven control towers and automation, multimodal modal shift (road-rail-sea), strong pipelines in SCS, JV partnerships, and cost/efficiency initiatives to convert capacity additions into higher volumes and resilient margins.</p>
+            </div>
+        </div>
+    
+        <div class="company-card">
+            <div class="company-header">
+                <div>
+                    <h2 class="company-name">Sportking India</h2>
+                    <div class="d-flex gap-2 flex-wrap mt-2">
+                        <a href="https://www.screener.in/company/SPORTKING/" target="_blank" class="company-link">
+                            <i class="fas fa-external-link-alt"></i> View on Screener
+                        </a>
+                    </div>
+                </div>
+                <div class="price-change badge-danger">
+                    <i class="fas fa-arrow-up"></i> -40.5%
+                </div>
+            </div>
+            
+            <div class="metrics-grid">
+                <div class="metric-item">
+                    <div class="metric-label">Market Cap</div>
+                    <div class="metric-value">₹2,916.0 Cr</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">P/E Ratio</div>
+                    <div class="metric-value">
+                        <span class="badge badge-warning">18.0</span>
+                    </div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Sales</div>
+                    <div class="metric-value">₹2,614.0 Cr</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">OPM</div>
+                    <div class="metric-value">14.0%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Promoter Holding</div>
+                    <div class="metric-value">74.4%</div>
+                </div>
+            </div>
+            
+            <div class="d-flex gap-2 mb-3">
+                <div class="growth-indicator">
+                    <i class="fas fa-chart-line"></i>
+                    <span>CAGR: 7.7% over 1 years</span>
+                </div>
+            </div>
+            
+            <div class="summary-section">
+                <h5><i class="fas fa-lightbulb text-warning"></i> AI Analysis Summary</h5>
+                <p class="summary-text">Sportking targets continued revenue growth (Q1 FY27 revenue ₹703.7 crore; FY26 ₹2,495.9 crore) driven by capacity expansion (1.5 lakh‑spindle Greenfield Odisha project boosting total to ~5.3 lakh), high (>96%) utilisation, forward integration via acquisitions (dyeing, garments), diversified product mix and geographic exports (~39 countries), cost savings from 40.3 MW solar power, and ongoing debottlenecking and efficiency measures to capture global demand (China+1) and scale exports.</p>
+            </div>
+        </div>
+    
+        <div class="company-card">
+            <div class="company-header">
+                <div>
+                    <h2 class="company-name">Dhanuka Agritech</h2>
+                    <div class="d-flex gap-2 flex-wrap mt-2">
+                        <a href="https://www.screener.in/company/DHANUKA/" target="_blank" class="company-link">
+                            <i class="fas fa-external-link-alt"></i> View on Screener
+                        </a>
+                    </div>
+                </div>
+                <div class="price-change badge-danger">
+                    <i class="fas fa-arrow-up"></i> -40.6%
+                </div>
+            </div>
+            
+            <div class="metrics-grid">
+                <div class="metric-item">
+                    <div class="metric-label">Market Cap</div>
+                    <div class="metric-value">₹4,551.0 Cr</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">P/E Ratio</div>
+                    <div class="metric-value">
+                        <span class="badge badge-warning">17.0</span>
+                    </div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Sales</div>
+                    <div class="metric-value">₹1,953.0 Cr</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">OPM</div>
+                    <div class="metric-value">18.8%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Promoter Holding</div>
+                    <div class="metric-value">69.8%</div>
+                </div>
+            </div>
+            
+            <div class="d-flex gap-2 mb-3">
+                <div class="growth-indicator">
+                    <i class="fas fa-chart-line"></i>
+                    <span>CAGR: 2.0% over 1 years</span>
+                </div>
+            </div>
+            
+            <div class="summary-section">
+                <h5><i class="fas fa-lightbulb text-warning"></i> AI Analysis Summary</h5>
+                <p class="summary-text">The company expects lower single-digit revenue growth for FY2026‑27 and a ~200 bps decline in EBITDA margin; near‑term Q1 callouts show revenues of ₹461.93 crore (down YoY). To achieve targets it will launch five new products, expand manufacturing (new 23,000 MT Nagpur plant by Apr 2028), leverage Dahej synthesis/R&D and Bayer fungicide brand acquisitions to boost exports and specialty product mix, strengthen sales/marketing and distribution (41 warehouses, 6,500+ distributors, 80,000+ retailers), and implement an ESOP to drive execution.</p>
+            </div>
+        </div>
+    
+        <div class="company-card">
+            <div class="company-header">
+                <div>
+                    <h2 class="company-name">Avadh Sugar</h2>
+                    <div class="d-flex gap-2 flex-wrap mt-2">
+                        <a href="https://www.screener.in/company/AVADHSUGAR/" target="_blank" class="company-link">
+                            <i class="fas fa-external-link-alt"></i> View on Screener
+                        </a>
+                    </div>
+                </div>
+                <div class="price-change badge-danger">
+                    <i class="fas fa-arrow-up"></i> -41.1%
+                </div>
+            </div>
+            
+            <div class="metrics-grid">
+                <div class="metric-item">
+                    <div class="metric-label">Market Cap</div>
+                    <div class="metric-value">₹1,117.0 Cr</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">P/E Ratio</div>
+                    <div class="metric-value">
+                        <span class="badge badge-warning">16.6</span>
+                    </div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Sales</div>
+                    <div class="metric-value">₹2,756.0 Cr</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">OPM</div>
+                    <div class="metric-value">10.2%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Promoter Holding</div>
+                    <div class="metric-value">60.4%</div>
+                </div>
+            </div>
+            
+            <div class="d-flex gap-2 mb-3">
+                <div class="growth-indicator">
+                    <i class="fas fa-chart-line"></i>
+                    <span>CAGR: 0.0% over 0 years</span>
+                </div>
+            </div>
+            
+            <div class="summary-section">
+                <h5><i class="fas fa-lightbulb text-warning"></i> AI Analysis Summary</h5>
+                <p class="summary-text">The presentation does not state an explicit revenue target; instead it reports Q1FY27 total income of Rs. 781.05 crore (9% YoY) and FY26 revenue of Rs. 2,698.57 crore, and outlines growth drivers to achieve higher revenue—scale from integrated sugar (34,800 TCD), ethanol (325 KLPD) and co-gen (74 MW) capacity, higher sugar sales volumes, improved product realisations, ramping ethanol blending (policy-driven demand), operational efficiencies, by‑product monetisation and structured farmer engagement to secure cane supply.</p>
+            </div>
+        </div>
+    
+        <div class="company-card">
+            <div class="company-header">
+                <div>
+                    <h2 class="company-name">Vardhman Textile</h2>
+                    <div class="d-flex gap-2 flex-wrap mt-2">
+                        <a href="https://www.screener.in/company/VTL/consolidated/" target="_blank" class="company-link">
+                            <i class="fas fa-external-link-alt"></i> View on Screener
+                        </a>
+                    </div>
+                </div>
+                <div class="price-change badge-danger">
+                    <i class="fas fa-arrow-up"></i> -48.7%
+                </div>
+            </div>
+            
+            <div class="metrics-grid">
+                <div class="metric-item">
+                    <div class="metric-label">Market Cap</div>
+                    <div class="metric-value">₹17,030.0 Cr</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">P/E Ratio</div>
+                    <div class="metric-value">
+                        <span class="badge badge-warning">20.1</span>
+                    </div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Sales</div>
+                    <div class="metric-value">₹10,186.0 Cr</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">OPM</div>
+                    <div class="metric-value">14.5%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Promoter Holding</div>
+                    <div class="metric-value">65.1%</div>
+                </div>
+            </div>
+            
+            <div class="d-flex gap-2 mb-3">
+                <div class="growth-indicator">
+                    <i class="fas fa-chart-line"></i>
+                    <span>CAGR: 2.9% over 1 years</span>
+                </div>
+            </div>
+            
+            <div class="summary-section">
+                <h5><i class="fas fa-lightbulb text-warning"></i> AI Analysis Summary</h5>
+                <p class="summary-text">The company expects fabric/garment capacity expansions (garment capacity doubling to 4.5M shirts, new open-end 50–55 ton/day line, and Dhar projects later) to drive revenue growth — garments could peak ~₹300 crore at full run-rate — while spinning/fabric volumes and higher yarn realizations (driven by sustained cotton/yarn demand, China buying, and better export/domestic traction) will boost sales; near-term revenue gains also from improved utilization of new synthetic fabric lines and export opportunities from FTAs, with modernization, biomass/solar projects and selective imports of duty-free cotton improving margins and supporting revenue targets.</p>
+            </div>
+        </div>
+    
+        <div class="company-card">
+            <div class="company-header">
+                <div>
+                    <h2 class="company-name">Thomas Cook (I)</h2>
+                    <div class="d-flex gap-2 flex-wrap mt-2">
+                        <a href="https://www.screener.in/company/THOMASCOOK/consolidated/" target="_blank" class="company-link">
+                            <i class="fas fa-external-link-alt"></i> View on Screener
+                        </a>
+                    </div>
+                </div>
+                <div class="price-change badge-danger">
+                    <i class="fas fa-arrow-up"></i> -53.7%
+                </div>
+            </div>
+            
+            <div class="metrics-grid">
+                <div class="metric-item">
+                    <div class="metric-label">Market Cap</div>
+                    <div class="metric-value">₹5,040.0 Cr</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">P/E Ratio</div>
+                    <div class="metric-value">
+                        <span class="badge badge-warning">22.4</span>
+                    </div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Sales</div>
+                    <div class="metric-value">₹8,082.0 Cr</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">OPM</div>
+                    <div class="metric-value">4.3%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Promoter Holding</div>
+                    <div class="metric-value">64.8%</div>
+                </div>
+            </div>
+            
+            <div class="d-flex gap-2 mb-3">
+                <div class="growth-indicator">
+                    <i class="fas fa-chart-line"></i>
+                    <span>CAGR: 6.6% over 1 years</span>
+                </div>
+            </div>
+            
+            <div class="summary-section">
+                <h5><i class="fas fa-lightbulb text-warning"></i> AI Analysis Summary</h5>
+                <p class="summary-text">The transcript doesn’t state explicit future revenue targets; it reports Q1 FY27 total income of ₹21.53bn (down 12% YoY) and segment revenues (Financial Services ₹892m, Travel & Related ₹17,106m, Leisure Hospitality ₹1,614m, Digital Imaging ₹1,307m) and outlines growth ambitions: scale expansion (increase resorts to 95 by 2027), strengthening high‑margin forex & prepaid card growth, digital/AI adoption to boost sales, DMS/MICE/corporate cross‑sell, and a planned Sterling resorts demerger to unlock value—measures intended to drive revenue and profitability recovery.</p>
+            </div>
+        </div>
+    
+        <div class="company-card">
+            <div class="company-header">
+                <div>
+                    <h2 class="company-name">International Gemological Instit</h2>
+                    <div class="d-flex gap-2 flex-wrap mt-2">
+                        <a href="https://www.screener.in/company/IGIL/consolidated/" target="_blank" class="company-link">
+                            <i class="fas fa-external-link-alt"></i> View on Screener
+                        </a>
+                    </div>
+                </div>
+                <div class="price-change badge-danger">
+                    <i class="fas fa-arrow-up"></i> -54.7%
+                </div>
+            </div>
+            
+            <div class="metrics-grid">
+                <div class="metric-item">
+                    <div class="metric-label">Market Cap</div>
+                    <div class="metric-value">₹15,774.0 Cr</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">P/E Ratio</div>
+                    <div class="metric-value">
+                        <span class="badge badge-danger">25.9</span>
+                    </div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Sales</div>
+                    <div class="metric-value">₹1,363.0 Cr</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">OPM</div>
+                    <div class="metric-value">%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Promoter Holding</div>
+                    <div class="metric-value">76.6%</div>
+                </div>
+            </div>
+            
+            <div class="d-flex gap-2 mb-3">
+                <div class="growth-indicator">
+                    <i class="fas fa-chart-line"></i>
+                    <span>CAGR: 17.2% over 1 years</span>
+                </div>
+            </div>
+            
+            <div class="summary-section">
+                <h5><i class="fas fa-lightbulb text-warning"></i> AI Analysis Summary</h5>
+                <p class="summary-text">The company targets revenue growth driven by certification volume expansion (aiming from ~33–38M certificates CY2025 toward ~75–80M by CY2030E) and higher penetration (certification penetration rising to ~80–85% by CY2030E), translating to FY benchmarks like Rs.15,976 Mn revenue (+18% YoY); it will achieve this via geographic expansion (scaling labs in Dubai, Turkey, Saudi, Europe, US), category diversification (natural, LGD, colored gemstones via AGL acquisition), process/tech efficiency (AI/ML, reengineered workflows), trade and consumer initiatives (retailer partnerships, B2C campaigns, co-branded certification) and targeted M&A.</p>
+            </div>
+        </div>
+    
+        <div class="company-card">
+            <div class="company-header">
+                <div>
+                    <h2 class="company-name">Kansai Nerolac</h2>
+                    <div class="d-flex gap-2 flex-wrap mt-2">
+                        <a href="https://www.screener.in/company/KANSAINER/consolidated/" target="_blank" class="company-link">
+                            <i class="fas fa-external-link-alt"></i> View on Screener
+                        </a>
+                    </div>
+                </div>
+                <div class="price-change badge-danger">
+                    <i class="fas fa-arrow-up"></i> -58.2%
+                </div>
+            </div>
+            
+            <div class="metrics-grid">
+                <div class="metric-item">
+                    <div class="metric-label">Market Cap</div>
+                    <div class="metric-value">₹16,503.0 Cr</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">P/E Ratio</div>
+                    <div class="metric-value">
+                        <span class="badge badge-danger">25.6</span>
+                    </div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Sales</div>
+                    <div class="metric-value">₹8,263.0 Cr</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">OPM</div>
+                    <div class="metric-value">11.7%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Promoter Holding</div>
+                    <div class="metric-value">75.0%</div>
+                </div>
+            </div>
+            
+            <div class="d-flex gap-2 mb-3">
+                <div class="growth-indicator">
+                    <i class="fas fa-chart-line"></i>
+                    <span>CAGR: 14.9% over 1 years</span>
+                </div>
+            </div>
+            
+            <div class="summary-section">
+                <h5><i class="fas fa-lightbulb text-warning"></i> AI Analysis Summary</h5>
+                <p class="summary-text">The company targets revenue growth (Q1 YoY ~10%: standalone net revenue Rs 22,995m, consolidated Rs 23,736m) and aims to sustain double-/high-single-digit expansion across decorative, construction chemicals/waterproofing, premium wood finishes, industrial (powder, GI/HPC), automotive and auto-refinish; growth drivers include new product launches, branding/media & digital campaigns, dealer/network expansion (1,700+ dealers, 80+ cities), project/B2B wins, capacity additions (~Rs.600cr, 65,880 KL paint + 9,780 KL resin), international collaborations, premiumisation and service-led initiatives.</p>
+            </div>
+        </div>
+    
+        <div class="company-card">
+            <div class="company-header">
+                <div>
+                    <h2 class="company-name">Usha Martin</h2>
+                    <div class="d-flex gap-2 flex-wrap mt-2">
+                        <a href="https://www.screener.in/company/USHAMART/consolidated/" target="_blank" class="company-link">
+                            <i class="fas fa-external-link-alt"></i> View on Screener
+                        </a>
+                    </div>
+                </div>
+                <div class="price-change badge-danger">
+                    <i class="fas fa-arrow-up"></i> -62.1%
+                </div>
+            </div>
+            
+            <div class="metrics-grid">
+                <div class="metric-item">
+                    <div class="metric-label">Market Cap</div>
+                    <div class="metric-value">₹15,348.0 Cr</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">P/E Ratio</div>
+                    <div class="metric-value">
+                        <span class="badge badge-danger">28.2</span>
+                    </div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Sales</div>
+                    <div class="metric-value">₹3,837.0 Cr</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">OPM</div>
+                    <div class="metric-value">17.1%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Promoter Holding</div>
+                    <div class="metric-value">40.3%</div>
+                </div>
+            </div>
+            
+            <div class="d-flex gap-2 mb-3">
+                <div class="growth-indicator">
+                    <i class="fas fa-chart-line"></i>
+                    <span>CAGR: 15.0% over 1 years</span>
+                </div>
+            </div>
+            
+            <div class="summary-section">
+                <h5><i class="fas fa-lightbulb text-warning"></i> AI Analysis Summary</h5>
+                <p class="summary-text">Usha Martin targets consolidated revenue growth of ~15% in value and 10–12% in volumes for FY27, driven by a shift to high-value, specialized products (value-added wire ropes, plasticated LRPC, Oceanfibre synthetic slings and Galfan wires), geographical expansion (US, Europe, exports), capacity additions (notably +6,000 tpa elevator rope) and INR 250–300 crore capex, with pricing pass-through, improved mix, operating efficiencies and ongoing customer approvals to sustain margins (~20%+).</p>
+            </div>
+        </div>
+    
+        <div class="company-card">
+            <div class="company-header">
+                <div>
+                    <h2 class="company-name">GPT Healthcare</h2>
+                    <div class="d-flex gap-2 flex-wrap mt-2">
+                        <a href="https://www.screener.in/company/GPTHEALTH/" target="_blank" class="company-link">
+                            <i class="fas fa-external-link-alt"></i> View on Screener
+                        </a>
+                    </div>
+                </div>
+                <div class="price-change badge-danger">
+                    <i class="fas fa-arrow-up"></i> -64.9%
+                </div>
+            </div>
+            
+            <div class="metrics-grid">
+                <div class="metric-item">
+                    <div class="metric-label">Market Cap</div>
+                    <div class="metric-value">₹1,346.0 Cr</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">P/E Ratio</div>
+                    <div class="metric-value">
+                        <span class="badge badge-danger">28.5</span>
+                    </div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Sales</div>
+                    <div class="metric-value">₹492.0 Cr</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">OPM</div>
+                    <div class="metric-value">20.5%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Promoter Holding</div>
+                    <div class="metric-value">65.6%</div>
+                </div>
+            </div>
+            
+            <div class="d-flex gap-2 mb-3">
+                <div class="growth-indicator">
+                    <i class="fas fa-chart-line"></i>
+                    <span>CAGR: 0.0% over 0 years</span>
+                </div>
+            </div>
+            
+            <div class="summary-section">
+                <h5><i class="fas fa-lightbulb text-warning"></i> AI Analysis Summary</h5>
+                <p class="summary-text">GPT Healthcare targets scaling revenue by expanding to a 1,000-bed network by FY27 and driving occupancy to ≥70% across mature hospitals, lifting ARPOB via higher-share complex/high‑acuity procedures (robotics, oncology, transplants) and new services (PET/LINAC, MAKO); it will add capacity via capital‑efficient, asset‑light models (developer‑funded land/buildings, fixed rentals), open new hospitals (e.g., Jamshedpur) in Tier‑I/II Eastern markets, and sustain ~25% ROCE through disciplined expansion, technology adoption, optimized pricing and improved utilization.</p>
+            </div>
+        </div>
+    
+        <div class="company-card">
+            <div class="company-header">
+                <div>
+                    <h2 class="company-name">Apollo Pipes</h2>
+                    <div class="d-flex gap-2 flex-wrap mt-2">
+                        <a href="https://www.screener.in/company/APOLLOPIPE/consolidated/" target="_blank" class="company-link">
+                            <i class="fas fa-external-link-alt"></i> View on Screener
+                        </a>
+                    </div>
+                </div>
+                <div class="price-change badge-danger">
+                    <i class="fas fa-arrow-up"></i> -118.0%
+                </div>
+            </div>
+            
+            <div class="metrics-grid">
+                <div class="metric-item">
+                    <div class="metric-label">Market Cap</div>
+                    <div class="metric-value">₹2,276.0 Cr</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">EV/S Ratio</div>
+                    <div class="metric-value">
+                        <span class="badge badge-warning">2.06</span>
+                    </div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Sales</div>
+                    <div class="metric-value">₹1,125.0 Cr</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">OPM</div>
+                    <div class="metric-value">%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Promoter Holding</div>
+                    <div class="metric-value">51.7%</div>
+                </div>
+            </div>
+            
+            <div class="d-flex gap-2 mb-3">
+                <div class="growth-indicator">
+                    <i class="fas fa-chart-line"></i>
+                    <span>CAGR: 34.8% over 5 years</span>
+                </div>
+            </div>
+            
+            <div class="summary-section">
+                <h5><i class="fas fa-lightbulb text-warning"></i> AI Analysis Summary</h5>
+                <p class="summary-text">Apollo Pipes targets Rs.5,000 crore revenue by FY31 (with four large plants each doing Rs.800–1,000 crore) and aims for high double-digit volume growth in near term and FY27; new product lines (window profiles ~7–8% of FY27 revenue, eventual 10%+), CPVC from Lubrizol tie-up, Varanasi and Maharashtra plant ramp-ups, Kisan merger synergies, brownfield/south expansion and phased ~Rs.600–700 crore CAPEX (mostly internal cash) will drive growth while focusing on operating leverage, working-capital release and maintaining 7–8% near-term EBITDA margins.</p>
+            </div>
+        </div>
+    
+        <div class="company-card">
+            <div class="company-header">
+                <div>
+                    <h2 class="company-name">Tata Chemicals</h2>
+                    <div class="d-flex gap-2 flex-wrap mt-2">
+                        <a href="https://www.screener.in/company/TATACHEM/consolidated/" target="_blank" class="company-link">
+                            <i class="fas fa-external-link-alt"></i> View on Screener
+                        </a>
+                    </div>
+                </div>
+                <div class="price-change badge-danger">
+                    <i class="fas fa-arrow-up"></i> -241.0%
+                </div>
+            </div>
+            
+            <div class="metrics-grid">
+                <div class="metric-item">
+                    <div class="metric-label">Market Cap</div>
+                    <div class="metric-value">₹17,192.0 Cr</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">EV/S Ratio</div>
+                    <div class="metric-value">
+                        <span class="badge badge-warning">1.64</span>
+                    </div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Sales</div>
+                    <div class="metric-value">₹15,120.0 Cr</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">OPM</div>
+                    <div class="metric-value">17.2%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Promoter Holding</div>
+                    <div class="metric-value">38.0%</div>
+                </div>
+            </div>
+            
+            <div class="d-flex gap-2 mb-3">
+                <div class="growth-indicator">
+                    <i class="fas fa-chart-line"></i>
+                    <span>CAGR: 12.0% over 1 years</span>
+                </div>
+            </div>
+            
+            <div class="summary-section">
+                <h5><i class="fas fa-lightbulb text-warning"></i> AI Analysis Summary</h5>
+                <p class="summary-text">The company targets growth by shifting capital and focus toward non‑cyclical "Living" and "Farm" essentials (food, feed, pharma, prebiotics, Rallis) while maintaining industrial strength; near‑term revenue rose 10–14% (standalone/consolidated) driven by higher volumes in India, Farm and Living segments, exports to LATAM, and project capex (salt/silica) to come online by 2027–28; execution levers include targeted capex allocation, portfolio de‑commoditization (silica, specialty salts, bicarbonate), customer‑centric sales/marketing, cost discipline, asset monetization to reduce debt, and piloting new adjacencies (sodium‑ion batteries) for future revenue.</p>
+            </div>
+        </div>
+    
+        <div class="section-divider">
+            <h2 class="section-title">
+                <i class="fas fa-bullhorn"></i> Company Announcements
+            </h2>
+        </div>
+    
+        <div class="announcement-card">
+            <div class="company-header">
+                <div>
+                    <h2 class="company-name">Mahanagar Gas</h2>
+                    <div class="d-flex gap-4 flex-wrap mt-2">
+                        <a href="https://www.screener.in/company/MGL/" target="_blank" class="company-link">
+                            <i class="fas fa-external-link-alt"></i> View on Screener
+                        </a>
+                        <a href="https://www.bseindia.com/stockinfo/AnnPdfOpen.aspx?Pname=ca846e90-4e5f-4469-8177-f8dae26637c5.pdf" target="_blank" class="company-link">
+                            <i class="fas fa-file-pdf"></i> View Announcement
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="metrics-grid">
+                <div class="metric-item">
+                    <div class="metric-label">Market Cap</div>
+                    <div class="metric-value">₹11,019.0 Cr</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">P/E Ratio</div>
+                    <div class="metric-value">
+                        <span class="badge badge-warning">15.3</span>
+                    </div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Sales</div>
+                    <div class="metric-value">₹8,531.0 Cr</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">OPM 5Year</div>
+                    <div class="metric-value">22.1%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Promoter Holding</div>
+                    <div class="metric-value">32.5%</div>
+                </div>
+            </div>
+            
+            <div class="summary-section"><h5><i class="fas fa-info-circle text-info"></i> Summary</h5><p class="summary-text">The announcement is a regulatory disclosure notifying the Notice of the 31st Annual General Meeting (AGM) of Mahanagar Gas Limited and publication of its Integrated Annual Report for FY 2025-26. It provides AGM details (date, time, mode), remote e-voting schedule, record/cut-off dates for dividend and e-voting, weblinks to the Notice and Annual Report, and contact information for the company and RTA.</p></div>
+        </div>
+        
+        <div class="announcement-card">
+            <div class="company-header">
+                <div>
+                    <h2 class="company-name">Butterfly Gan Ap</h2>
+                    <div class="d-flex gap-4 flex-wrap mt-2">
+                        <a href="https://www.screener.in/company/BUTTERFLY/" target="_blank" class="company-link">
+                            <i class="fas fa-external-link-alt"></i> View on Screener
+                        </a>
+                        <a href="https://www.bseindia.com/stockinfo/AnnPdfOpen.aspx?Pname=4c23e348-2812-42bd-a4a3-921ea311ffe9.pdf" target="_blank" class="company-link">
+                            <i class="fas fa-file-pdf"></i> View Announcement
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="metrics-grid">
+                <div class="metric-item">
+                    <div class="metric-label">Market Cap</div>
+                    <div class="metric-value">₹1,313.0 Cr</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">P/E Ratio</div>
+                    <div class="metric-value">
+                        <span class="badge badge-danger">26.7</span>
+                    </div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Sales</div>
+                    <div class="metric-value">₹970.0 Cr</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">OPM 5Year</div>
+                    <div class="metric-value">7.0%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Promoter Holding</div>
+                    <div class="metric-value">75.0%</div>
+                </div>
+            </div>
+            
+            <div class="summary-section"><h5><i class="fas fa-info-circle text-info"></i> Summary</h5><p class="summary-text">Butterfly Gandhimathi Appliances Ltd. reported Q1 FY27 standalone results: revenue Rs.214 Cr (+14% YoY), EBITDA Rs.15 Cr (+17% YoY), PAT Rs.9 Cr (+38% YoY). Material margin held at 41.1%; EBITDA margin 7.0% and PAT margin 4.2%. Company gained market share in mixer grinders, pressure cookers and glass cooktops, expanded premium Idea First Series, mitigated commodity inflation via pricing, and highlighted investments in brand, people and an innovation pipeline. Won the Golden Peacock Eco-Innovation Award 2026 for RENZ COOKTOP (India’s first 5‑star rated cooktop).</p></div>
+        </div>
+        
+        <div class="announcement-card">
+            <div class="company-header">
+                <div>
+                    <h2 class="company-name">K K Silk Mills</h2>
+                    <div class="d-flex gap-4 flex-wrap mt-2">
+                        <a href="https://www.screener.in/company/544624/" target="_blank" class="company-link">
+                            <i class="fas fa-external-link-alt"></i> View on Screener
+                        </a>
+                        <a href="https://www.bseindia.com/stockinfo/AnnPdfOpen.aspx?Pname=35776558-6dab-46e5-a189-44c87c37e5d0.pdf" target="_blank" class="company-link">
+                            <i class="fas fa-file-pdf"></i> View Announcement
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="metrics-grid">
+                <div class="metric-item">
+                    <div class="metric-label">Market Cap</div>
+                    <div class="metric-value">₹22.0 Cr</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">P/E Ratio</div>
+                    <div class="metric-value">
+                        <span class="badge badge-success">4.60</span>
+                    </div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Sales</div>
+                    <div class="metric-value">₹245.0 Cr</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">OPM 5Year</div>
+                    <div class="metric-value">5.4%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Promoter Holding</div>
+                    <div class="metric-value">66.4%</div>
+                </div>
+            </div>
+            
+            <div class="summary-section"><h5><i class="fas fa-info-circle text-info"></i> Summary</h5><p class="summary-text">The announcement is the company’s Annual Report and AGM notice for FY 2025–26 (K K Silk Mills Limited). It covers financial results, board and management changes, re‑appointments, committee reports, corporate governance, CSR, auditors’ reports, IPO/listing details, and operational/strategic highlights including emphasis on innovation and technology adoption to improve operational efficiency. It also notes capital expenditure (CWIP) and modernization of manufacturing (weaving technology) and an ongoing focus on product innovation and technological advancements.</p></div>
+        </div>
+        
+        <div class="announcement-card">
+            <div class="company-header">
+                <div>
+                    <h2 class="company-name">GP Petroleums</h2>
+                    <div class="d-flex gap-4 flex-wrap mt-2">
+                        <a href="https://www.screener.in/company/GULFPETRO/" target="_blank" class="company-link">
+                            <i class="fas fa-external-link-alt"></i> View on Screener
+                        </a>
+                        <a href="https://www.bseindia.com/stockinfo/AnnPdfOpen.aspx?Pname=7849bb33-b939-489b-af87-f9e5e5c96d33.pdf" target="_blank" class="company-link">
+                            <i class="fas fa-file-pdf"></i> View Announcement
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="metrics-grid">
+                <div class="metric-item">
+                    <div class="metric-label">Market Cap</div>
+                    <div class="metric-value">₹268.0 Cr</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">P/E Ratio</div>
+                    <div class="metric-value">
+                        <span class="badge badge-success">6.15</span>
+                    </div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Sales</div>
+                    <div class="metric-value">₹714.0 Cr</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">OPM 5Year</div>
+                    <div class="metric-value">5.5%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Promoter Holding</div>
+                    <div class="metric-value">37.0%</div>
+                </div>
+            </div>
+            
+            <div class="summary-section"><h5><i class="fas fa-info-circle text-info"></i> Summary</h5><p class="summary-text">GP Petroleums Limited filed notice for its 43rd AGM (Aug 26, 2026) and submitted the Annual Report for FY2025–26. Key disclosures: AGM via VC/OAVM; Record date for dividend (if approved) Aug 19, 2026; Board recommended final dividend ₹0.50/share; audited financials: standalone revenue ₹642.61 crore, EBITDA ₹44.40 crore (after exceptional item EBITDA ₹41.14 crore), PBT ₹35.34 million and PAT ₹26.47 million; strategic updates: JV Amron Oil Resources Pvt. Ltd. (bitumen), LOAs from BPCL/HPCL for bitumen supply, land acquisition at Savli (Gujarat) for bitumen facility; R&D, new products and sustainability/CSR activities highlighted.</p></div>
+        </div>
+        
+        <div class="announcement-card">
+            <div class="company-header">
+                <div>
+                    <h2 class="company-name">GPT Healthcare</h2>
+                    <div class="d-flex gap-4 flex-wrap mt-2">
+                        <a href="https://www.screener.in/company/GPTHEALTH/" target="_blank" class="company-link">
+                            <i class="fas fa-external-link-alt"></i> View on Screener
+                        </a>
+                        <a href="https://www.bseindia.com/stockinfo/AnnPdfOpen.aspx?Pname=c188361c-cc5f-4d91-a11a-262617b7988a.pdf" target="_blank" class="company-link">
+                            <i class="fas fa-file-pdf"></i> View Announcement
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="metrics-grid">
+                <div class="metric-item">
+                    <div class="metric-label">Market Cap</div>
+                    <div class="metric-value">₹1,346.0 Cr</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">P/E Ratio</div>
+                    <div class="metric-value">
+                        <span class="badge badge-danger">28.5</span>
+                    </div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Sales</div>
+                    <div class="metric-value">₹492.0 Cr</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">OPM 5Year</div>
+                    <div class="metric-value">20.5%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Promoter Holding</div>
+                    <div class="metric-value">65.6%</div>
+                </div>
+            </div>
+            
+            <div class="summary-section"><h5><i class="fas fa-info-circle text-info"></i> Summary</h5><p class="summary-text">GPT Healthcare reported Q1 FY27 financials, showing 18% YoY revenue growth to Rs 128.2 Cr, EBITDA Rs 26.2 Cr and PAT Rs 12.7 Cr. Operational highlights include improved occupancy, 700+ renal transplants at ILS Dum Dum, 800+ robotic surgeries at ILS Salt Lake, launch of a Robotic Knee Surgery programme (MAKO) at ILS Howrah, delivery of 700+ radiation therapy procedures at ILS Agartala, Raipur obtaining a liver transplant license, participation in the BEMAKI acute kidney injury clinical trial, and plans for network expansion to >1,000 beds.</p></div>
+        </div>
+        
+        <div class="announcement-card">
+            <div class="company-header">
+                <div>
+                    <h2 class="company-name">Mastek</h2>
+                    <div class="d-flex gap-4 flex-wrap mt-2">
+                        <a href="https://www.screener.in/company/MASTEK/consolidated/" target="_blank" class="company-link">
+                            <i class="fas fa-external-link-alt"></i> View on Screener
+                        </a>
+                        <a href="https://www.bseindia.com/stockinfo/AnnPdfOpen.aspx?Pname=89a41477-b6a3-4653-bdfa-cd507b3c41d6.pdf" target="_blank" class="company-link">
+                            <i class="fas fa-file-pdf"></i> View Announcement
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="metrics-grid">
+                <div class="metric-item">
+                    <div class="metric-label">Market Cap</div>
+                    <div class="metric-value">₹5,869.0 Cr</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">P/E Ratio</div>
+                    <div class="metric-value">
+                        <span class="badge badge-success">13.4</span>
+                    </div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Sales</div>
+                    <div class="metric-value">₹3,769.0 Cr</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">OPM 5Year</div>
+                    <div class="metric-value">17.1%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Promoter Holding</div>
+                    <div class="metric-value">35.8%</div>
+                </div>
+            </div>
+            
+            <div class="summary-section"><h5><i class="fas fa-info-circle text-info"></i> Summary</h5><p class="summary-text">Mastek Inc. announced a strategic Platinum Partnership with Innovaccer to implement Innovaccer’s Gravity healthcare intelligence platform. Mastek will provide engineering, data, and AI expertise to integrate and scale the platform across healthcare organizations in North America, UK, Europe, and the Middle East, aiming to turn fragmented clinical and claims data into actionable intelligence, improve outcomes, reduce costs, and enable new AI-driven use cases. The partnership expands global delivery capabilities and advances both firms’ healthcare AI transformation offerings.</p></div>
+        </div>
+        
+        <div class="announcement-card">
+            <div class="company-header">
+                <div>
+                    <h2 class="company-name">Bhatia Colour</h2>
+                    <div class="d-flex gap-4 flex-wrap mt-2">
+                        <a href="https://www.screener.in/company/543497/" target="_blank" class="company-link">
+                            <i class="fas fa-external-link-alt"></i> View on Screener
+                        </a>
+                        <a href="https://www.bseindia.com/stockinfo/AnnPdfOpen.aspx?Pname=c96e88a4-2411-4986-97b5-27c375ca16ea.pdf" target="_blank" class="company-link">
+                            <i class="fas fa-file-pdf"></i> View Announcement
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="metrics-grid">
+                <div class="metric-item">
+                    <div class="metric-label">Market Cap</div>
+                    <div class="metric-value">₹50.1 Cr</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">P/E Ratio</div>
+                    <div class="metric-value">
+                        <span class="badge badge-success">12.0</span>
+                    </div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Sales</div>
+                    <div class="metric-value">₹155.0 Cr</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">OPM 5Year</div>
+                    <div class="metric-value">6.1%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Promoter Holding</div>
+                    <div class="metric-value">39.7%</div>
+                </div>
+            </div>
+            
+            <div class="summary-section"><h5><i class="fas fa-info-circle text-info"></i> Summary</h5><p class="summary-text">Bhatia Colour Chem Limited notice of 5th AGM (to be held Aug 25, 2026) details agenda: adoption of audited financials, reappointments of Managing Director and Whole-time Directors (three reappointments), ratification of cost auditor remuneration, approval of increased remuneration for one director, and seeking shareholder approval for multiple material related-party transactions and omnibus limits with related entities (including purchases, sales, borrowings, leases). It includes e-voting instructions, annexures, director profiles and statutory disclosures. The notice mentions the Whole-time Director’s role in research & development in chemicals/dyestuffs.</p></div>
+        </div>
+        
+        <div class="announcement-card">
+            <div class="company-header">
+                <div>
+                    <h2 class="company-name">K. V. Toys India</h2>
+                    <div class="d-flex gap-4 flex-wrap mt-2">
+                        <a href="https://www.screener.in/company/544641/" target="_blank" class="company-link">
+                            <i class="fas fa-external-link-alt"></i> View on Screener
+                        </a>
+                        <a href="https://www.bseindia.com/stockinfo/AnnPdfOpen.aspx?Pname=df76baa1-a12d-4f67-b82f-ca47374464bc.pdf" target="_blank" class="company-link">
+                            <i class="fas fa-file-pdf"></i> View Announcement
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="metrics-grid">
+                <div class="metric-item">
+                    <div class="metric-label">Market Cap</div>
+                    <div class="metric-value">₹181.0 Cr</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">P/E Ratio</div>
+                    <div class="metric-value">
+                        <span class="badge badge-warning">20.8</span>
+                    </div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Sales</div>
+                    <div class="metric-value">₹175.0 Cr</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">OPM 5Year</div>
+                    <div class="metric-value">%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Promoter Holding</div>
+                    <div class="metric-value">58.5%</div>
+                </div>
+            </div>
+            
+            <div class="summary-section"><h5><i class="fas fa-info-circle text-info"></i> Summary</h5><p class="summary-text">K V Toys India Ltd reported Q1 FY27 results with 23% YoY revenue growth (₹4,462 lakhs). The company is expanding its proprietary QUCO platform across multiple toy categories, investing in product innovation and manufacturing capabilities (SEDEX, ISI, BIS certified), participating in trade exhibitions, and pursuing domestic and export market expansion to build a scalable, innovation-led “House of Play” ecosystem.</p></div>
+        </div>
+        
+        <div class="announcement-card">
+            <div class="company-header">
+                <div>
+                    <h2 class="company-name">Basilic Fly Stud</h2>
+                    <div class="d-flex gap-4 flex-wrap mt-2">
+                        <a href="https://www.screener.in/company/BASILIC/consolidated/" target="_blank" class="company-link">
+                            <i class="fas fa-external-link-alt"></i> View on Screener
+                        </a>
+                        <a href="https://nsearchives.nseindia.com/corporate/BASILIC_03082026131747_Business_Update_sd.pdf" target="_blank" class="company-link">
+                            <i class="fas fa-file-pdf"></i> View Announcement
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="metrics-grid">
+                <div class="metric-item">
+                    <div class="metric-label">Market Cap</div>
+                    <div class="metric-value">₹510.0 Cr</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">P/E Ratio</div>
+                    <div class="metric-value">
+                        <span class="badge badge-success">9.99</span>
+                    </div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Sales</div>
+                    <div class="metric-value">₹408.0 Cr</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">OPM 5Year</div>
+                    <div class="metric-value">26.0%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Promoter Holding</div>
+                    <div class="metric-value">55.3%</div>
+                </div>
+            </div>
+            
+            <div class="summary-section"><h5><i class="fas fa-info-circle text-info"></i> Summary</h5><p class="summary-text">Basilic Fly Studio Ltd. won new international VFX orders worth ~INR 105 Cr in FY27 YTD from major streaming platforms (Netflix, Disney, Apple) and expanded its bidding pipeline to INR 700 Cr with 40% in advanced stages. The company is scaling India delivery centers (notably Bengaluru), adding global leadership hires, deploying tech initiatives including Project Hybrid (cloud cost savings), NetApp storage, USD pipeline integration, and AI-assisted production (ComfyUI with Nuke). These moves strengthen production capacity, efficiency, and innovation for FY27 growth.</p></div>
+        </div>
+        
+        <div class="announcement-card">
+            <div class="company-header">
+                <div>
+                    <h2 class="company-name">La Opala RG</h2>
+                    <div class="d-flex gap-4 flex-wrap mt-2">
+                        <a href="https://www.screener.in/company/LAOPALA/" target="_blank" class="company-link">
+                            <i class="fas fa-external-link-alt"></i> View on Screener
+                        </a>
+                        <a href="https://www.bseindia.com/stockinfo/AnnPdfOpen.aspx?Pname=a975aaef-2b08-49c1-956f-e0e17a978b1b.pdf" target="_blank" class="company-link">
+                            <i class="fas fa-file-pdf"></i> View Announcement
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="metrics-grid">
+                <div class="metric-item">
+                    <div class="metric-label">Market Cap</div>
+                    <div class="metric-value">₹2,088.0 Cr</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">P/E Ratio</div>
+                    <div class="metric-value">
+                        <span class="badge badge-warning">22.3</span>
+                    </div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Sales</div>
+                    <div class="metric-value">₹309.0 Cr</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">OPM 5Year</div>
+                    <div class="metric-value">36.8%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Promoter Holding</div>
+                    <div class="metric-value">66.3%</div>
+                </div>
+            </div>
+            
+            <div class="summary-section"><h5><i class="fas fa-info-circle text-info"></i> Summary</h5><p class="summary-text">La Opala RG Limited filed notice of its 39th AGM (to be held Aug 27, 2026) and enclosed the Annual Report for FY 2025–26. The report highlights operations and financials (Revenue Rs. 309.06 crore; PAT Rs. 92.30 crore), quarterly performance, brands (La Opala, Diva, Solitaire Crystal), manufacturing footprint (Sitarganj, Madhupur), distribution (265 distributors, 23,000+ retailers), sustainability/ESG, CSR spend (Rs. 243.35 lakh), board changes and meeting details, audits, risk management, and dividend recommendation (Rs.5 per share). Annual Report is on company website.</p></div>
+        </div>
+        
+        <div class="announcement-card">
+            <div class="company-header">
+                <div>
+                    <h2 class="company-name">Sahana Systems</h2>
+                    <div class="d-flex gap-4 flex-wrap mt-2">
+                        <a href="https://www.screener.in/company/SAHANA/consolidated/" target="_blank" class="company-link">
+                            <i class="fas fa-external-link-alt"></i> View on Screener
+                        </a>
+                        <a href="https://nsearchives.nseindia.com/corporate/SAHANA_03082026121152_BMOutcome_03082026.pdf" target="_blank" class="company-link">
+                            <i class="fas fa-file-pdf"></i> View Announcement
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="metrics-grid">
+                <div class="metric-item">
+                    <div class="metric-label">Market Cap</div>
+                    <div class="metric-value">₹882.0 Cr</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">P/E Ratio</div>
+                    <div class="metric-value">
+                        <span class="badge badge-success">13.0</span>
+                    </div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Sales</div>
+                    <div class="metric-value">₹331.0 Cr</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">OPM 5Year</div>
+                    <div class="metric-value">%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Promoter Holding</div>
+                    <div class="metric-value">57.3%</div>
+                </div>
+            </div>
+            
+            <div class="summary-section"><h5><i class="fas fa-info-circle text-info"></i> Summary</h5><p class="summary-text">Sahana System approved allotment of 1,767,421 bonus shares (1:5), increasing paid-up capital to Rs.10,60,45,250. It will shift its registered office within Ahmedabad effective Aug 4, 2026. The Board approved incorporation and investment in a proposed subsidiary, Sahana Semi-Conductor(s) Limited, to design and fabricate semiconductor products; Sahana will subscribe 60% (6,000 shares at Rs.10 each) and promoter Mr. Pratik Kakadia 40% (4,000 shares), initial cash subscription Rs.60,000. The bonus shares will rank pari-passu and be credited within statutory limits.</p></div>
+        </div>
+        
+        <div class="announcement-card">
+            <div class="company-header">
+                <div>
+                    <h2 class="company-name">Baheti Recycling</h2>
+                    <div class="d-flex gap-4 flex-wrap mt-2">
+                        <a href="https://www.screener.in/company/BAHETI/" target="_blank" class="company-link">
+                            <i class="fas fa-external-link-alt"></i> View on Screener
+                        </a>
+                        <a href="https://nsearchives.nseindia.com/corporate/BAHETI_03082026113948_Intimation_of_Press_Release.pdf" target="_blank" class="company-link">
+                            <i class="fas fa-file-pdf"></i> View Announcement
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="metrics-grid">
+                <div class="metric-item">
+                    <div class="metric-label">Market Cap</div>
+                    <div class="metric-value">₹751.0 Cr</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">P/E Ratio</div>
+                    <div class="metric-value">
+                        <span class="badge badge-danger">27.8</span>
+                    </div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Sales</div>
+                    <div class="metric-value">₹725.0 Cr</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">OPM 5Year</div>
+                    <div class="metric-value">6.2%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Promoter Holding</div>
+                    <div class="metric-value">74.1%</div>
+                </div>
+            </div>
+            
+            <div class="summary-section"><h5><i class="fas fa-info-circle text-info"></i> Summary</h5><p class="summary-text">Baheti Recycling Industries commissioned a 1.56 MW (DC) captive ground-mounted solar power plant in Mehsana, Gujarat, operational from July 2026. The plant is expected to save about ₹15 lakh monthly (≈₹1.8 crore annualized), has an estimated 25-year life, and will reduce reliance on grid power, lower energy costs, improve margins, and cut carbon emissions—supporting the company’s ESG and clean-energy transition objectives.</p></div>
+        </div>
+        
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        let cards = [];
+        let availableReports = [];
+        let currentReportDate = null;
+        let isLoadingReports = false;
+        const githubApiBase = 'https://api.github.com/repos/eldhoz515/stock-analysis/contents/concalls';
+        const githubPagesBase = 'https://eldhoz515.github.io/stock-analysis/concalls';
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            cards = Array.from(document.querySelectorAll('.hero-section, .company-card, .announcement-card'));
+            initializeNavigation();
+        });
+        
+        function getCurrentVisibleCardIndex() {
+            if (cards.length === 0) return -1;
+            
+            const viewportTop = window.scrollY;
+            const viewportCenter = viewportTop + (window.innerHeight / 2);
+            
+            // Find the card closest to the center of the viewport
+            let closestIndex = 0;
+            let closestDistance = Infinity;
+            
+            cards.forEach((card, index) => {
+                const rect = card.getBoundingClientRect();
+                const cardTop = rect.top + window.scrollY;
+                const cardCenter = cardTop + (rect.height / 2);
+                const distance = Math.abs(cardCenter - viewportCenter);
+                
+                if (distance < closestDistance) {
+                    closestDistance = distance;
+                    closestIndex = index;
+                }
+            });
+            
+            return closestIndex;
+        }
+        
+        function focusCard(index) {
+            if (cards.length === 0) return;
+            
+            // Handle boundary conditions
+            if (index < 0) index = cards.length - 1;
+            if (index >= cards.length) index = 0;
+            
+            if (cards[index]) {
+                cards[index].scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }
+        
+        async function initializeNavigation() {
+            // Extract current report date from URL
+            const currentFilename = window.location.pathname.split('/').pop();
+            const dateMatch = currentFilename.match(/(\d{4}-\d{2}-\d{2})_(\d{4}-\d{2}-\d{2})\.html/);
+            
+            if (dateMatch) {
+                currentReportDate = dateMatch[1]; // Use start date
+                await loadAvailableReports();
+            }
+        }
+        
+        async function loadAvailableReports() {
+            if (isLoadingReports) return;
+            isLoadingReports = true;
+            
+            try {
+                const response = await fetch(githubApiBase);
+                const files = await response.json();
+                
+                if (Array.isArray(files)) {
+                    const reports = [];
+                    files.forEach(file => {
+                        const match = file.name.match(/(\d{4}-\d{2}-\d{2})_(\d{4}-\d{2}-\d{2})\.html/);
+                        if (match) {
+                            reports.push({
+                                startDate: match[1],
+                                endDate: match[2],
+                                filename: file.name,
+                                url: `${githubPagesBase}/${file.name}`
+                            });
+                        }
+                    });
+                    
+                    // Sort by start date
+                    reports.sort((a, b) => a.startDate.localeCompare(b.startDate));
+                    availableReports = reports;
+                }
+            } catch (error) {
+                console.error('Error loading reports:', error);
+            } finally {
+                isLoadingReports = false;
+            }
+        }
+        
+        function navigateToReport(direction) {
+            if (!currentReportDate || availableReports.length === 0) return;
+            
+            const currentIndex = availableReports.findIndex(r => r.startDate === currentReportDate);
+            if (currentIndex === -1) return;
+            
+            let targetIndex;
+            if (direction === 'prev') {
+                targetIndex = currentIndex - 1;
+                if (targetIndex < 0) targetIndex = availableReports.length - 1; // Wrap to last
+            } else {
+                targetIndex = currentIndex + 1;
+                if (targetIndex >= availableReports.length) targetIndex = 0; // Wrap to first
+            }
+            
+            const targetReport = availableReports[targetIndex];
+            if (targetReport) {
+                window.location.href = targetReport.url;
+            }
+        }
+        
+        document.addEventListener('keydown', function(e) {
+            if (['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) return;
+            
+            // Check if Shift key is pressed for date navigation
+            if (e.shiftKey) {
+                if (e.key === 'ArrowLeft') {
+                    e.preventDefault();
+                    navigateToReport('prev');
+                    return;
+                } else if (e.key === 'ArrowRight') {
+                    e.preventDefault();
+                    navigateToReport('next');
+                    return;
+                }
+            }
+            
+            // Default card navigation (without Shift)
+            const currentIndex = getCurrentVisibleCardIndex();
+            
+            if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                focusCard(currentIndex - 1);
+            } else if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                focusCard(currentIndex + 1);
+            } else if (e.key === 'ArrowLeft') {
+                e.preventDefault();
+                focusCard(currentIndex - 1);
+            } else if (e.key === 'ArrowRight') {
+                e.preventDefault();
+                focusCard(currentIndex + 1);
+            } else if (e.key === 'Home') {
+                e.preventDefault();
+                focusCard(0);
+            } else if (e.key === 'End') {
+                e.preventDefault();
+                focusCard(cards.length - 1);
+            }
+        });
+        
+        // Optional: Handle clicks for immediate scrolling
+        document.addEventListener('click', function(e) {
+            const clickedCard = e.target.closest('.company-card, .announcement-card');
+            if (clickedCard) {
+                clickedCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        });
+    </script>
+</body>
+</html>
