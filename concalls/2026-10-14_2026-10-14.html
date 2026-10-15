@@ -1,0 +1,910 @@
+
+<!DOCTYPE html>
+<html lang="en" style="background:black;">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock Analysis Report</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #ffffff;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --danger-color: #ef4444;
+            --dark-bg: #000000;
+            --dark-surface: #0a0a0a;
+            --dark-border: #222222;
+            --dark-text: #d4d4d4;
+            --dark-text-muted: #999999;
+        }
+        
+        * {
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: #000000;
+            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            color: var(--dark-text);
+            margin: 0;
+            padding: 0;
+        }
+        
+        .main-container {
+            background: #000000;
+            margin: 0 auto;
+            padding: 40px;
+            max-width: 1400px;
+        }
+        
+        .hero-section {
+            text-align: center;
+            margin-bottom: 50px;
+            padding: 40px 0;
+            background: #0a0a0a;
+            border-radius: 20px;
+            border: 1px solid var(--dark-border);
+            scroll-margin: 20px;
+        }
+        
+        .hero-title {
+            color: #d4d4d4;
+            font-size: 3.5rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+        
+        .section-divider {
+            background: #0a0a0a;
+            border-radius: 20px;
+            padding: 30px;
+            margin: 50px 0;
+            text-align: center;
+            border: 1px solid var(--dark-border);
+        }
+        
+        .section-title {
+            color: #d4d4d4;
+            font-size: 2.5rem;
+            font-weight: 600;
+            margin: 0;
+        }
+        
+        .home-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #1a1a1a;
+            color: #d4d4d4;
+            text-decoration: none;
+            font-weight: 600;
+            padding: 12px 24px;
+            border-radius: 12px;
+            border: 1px solid var(--dark-border);
+            transition: all 0.3s ease;
+            margin-top: 15px;
+        }
+        
+        .home-button:hover {
+            background: #222222;
+            color: #d4d4d4;
+            transform: translateY(-2px);
+        }
+        
+        .company-card, .announcement-card {
+            background: linear-gradient(135deg, #0a0a0a 0%, #141414 100%);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 25px;
+            border: 1px solid var(--dark-border);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            scroll-margin: 10px;
+        }
+        
+        .announcement-card {
+            border-left: 5px solid #444444;
+        }
+        
+        .company-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .company-name {
+            font-size: 2rem;
+            font-weight: 600;
+            color: #d4d4d4;
+            margin: 0;
+        }
+        
+        .announcement-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: var(--dark-text);
+            margin: 10px 0;
+            line-height: 1.4;
+        }
+        
+        .price-change {
+            font-size: 1.6rem;
+            font-weight: 600;
+            padding: 12px 20px;
+            border-radius: 30px;
+            color: #d4d4d4;
+            border: 1px solid var(--dark-border);
+            white-space: nowrap;
+        }
+        
+        .announcement-date {
+            background: #1a1a1a;
+            color: #d4d4d4;
+            font-size: 0.9rem;
+            font-weight: 600;
+            padding: 8px 16px;
+            border-radius: 20px;
+            border: 1px solid var(--dark-border);
+            white-space: nowrap;
+        }
+        
+        .pdf-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #1a1a1a;
+            color: #d4d4d4;
+            text-decoration: none;
+            font-weight: 600;
+            padding: 12px 20px;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            border: 1px solid var(--dark-border);
+            margin-top: 15px;
+        }
+        
+        .pdf-link:hover {
+            background: #222222;
+            color: #d4d4d4;
+            transform: translateY(-2px);
+        }
+        
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+            margin: 25px 0;
+        }
+        
+        .metric-item {
+            background: var(--dark-surface);
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            border: 1px solid var(--dark-border);
+            transition: all 0.3s ease;
+        }
+        
+        .metric-label {
+            font-size: 0.85rem;
+            color: var(--dark-text-muted);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+        
+        .metric-value {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--dark-text);
+        }
+        
+        .summary-section {
+            background: var(--dark-surface);
+            padding: 25px;
+            border-radius: 15px;
+            border-left: 5px solid var(--primary-color);
+            margin-top: 25px;
+        }
+        
+        .summary-text {
+            color: var(--dark-text-muted);
+            line-height: 1.8;
+            font-size: 1.5rem;
+            margin-top: 15px;
+        }
+        
+        .badge-success-lg {
+            background: linear-gradient(135deg, #059669, #16a34a);
+        }
+        
+        .badge-success {
+            background: linear-gradient(135deg, #10b981, #34d399);
+        }
+        
+        .badge-warning {
+            background: linear-gradient(135deg, #d97706, #f59e0b);
+        }
+        
+        .badge-danger {
+            background: linear-gradient(135deg, #dc2626, #ef4444);
+        }
+        
+        .stats-banner {
+            background: #0a0a0a;
+            color: #d4d4d4;
+            padding: 35px;
+            border-radius: 20px;
+            margin-bottom: 40px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 25px;
+            border: 1px solid var(--dark-border);
+        }
+        
+        .stat-item {
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 600;
+            display: block;
+            color: #d4d4d4;
+        }
+        
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.8;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-top: 5px;
+        }
+        
+        .growth-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.95rem;
+            padding: 8px 16px;
+            border-radius: 20px;
+            background: #1a1a1a;
+            color: #10b981;
+            border: 1px solid var(--dark-border);
+            margin-bottom: 10px;
+        }
+        
+        .company-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: #d4d4d4;
+            text-decoration: none;
+            font-weight: 600;
+            padding: 12px 20px;
+            border-radius: 12px;
+            background: #1a1a1a;
+            border: 1px solid var(--dark-border);
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+        
+        .company-link:hover {
+            background: #222222;
+            color: #d4d4d4;
+            transform: translateY(-2px);
+        }
+        
+        .text-muted {
+            color: var(--dark-text-muted) !important;
+        }
+        
+        .lead {
+            color: var(--dark-text-muted);
+            font-size: 1.1rem;
+        }
+        
+        @media (max-width: 768px) {
+            .hero-title { font-size: 2.5rem; }
+            .section-title { font-size: 2rem; }
+            .company-header { flex-direction: column; gap: 15px; }
+            .metrics-grid { grid-template-columns: 1fr 1fr; }
+            .main-container { padding: 20px; margin: 10px; }
+            .stats-banner { grid-template-columns: 1fr 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <div class="hero-section">
+            <h1 class="hero-title">
+                <i class="fas fa-chart-line"></i> Stock Analysis Report
+            </h1>
+            <p class="lead text-muted">
+                <i class="far fa-calendar"></i> Generated for October 14, 2026
+            </p>
+            <a href="https://eldhoz515.github.io/stock-analysis/" class="home-button">
+                <i class="fas fa-home"></i> Back to Calendar
+            </a>
+        </div>
+        
+        <div class="stats-banner">
+            <div class="stat-item">
+                <span class="stat-number">3</span>
+                <div class="stat-label">Concalls Analyzed</div>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number">5</span>
+                <div class="stat-label">Announcements</div>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number">1</span>
+                <div class="stat-label">High Growth (>50%)</div>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number">254%</span>
+                <div class="stat-label">Highest Prediction</div>
+            </div>
+        </div>
+
+        <div class="section-divider">
+            <h2 class="section-title">
+                <i class="fas fa-microphone"></i> Concall Analysis
+            </h2>
+        </div>
+    
+        <div class="company-card">
+            <div class="company-header">
+                <div>
+                    <h2 class="company-name">Emmvee Photovol.</h2>
+                    <div class="d-flex gap-2 flex-wrap mt-2">
+                        <a href="https://www.screener.in/company/EMMVEE/consolidated/" target="_blank" class="company-link">
+                            <i class="fas fa-external-link-alt"></i> View on Screener
+                        </a>
+                    </div>
+                </div>
+                <div class="price-change badge-success-lg">
+                    <i class="fas fa-arrow-up"></i> 254.1%
+                </div>
+            </div>
+            
+            <div class="metrics-grid">
+                <div class="metric-item">
+                    <div class="metric-label">Market Cap</div>
+                    <div class="metric-value">₹19,521.0 Cr</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">P/E Ratio</div>
+                    <div class="metric-value">
+                        <span class="badge badge-success">13.8</span>
+                    </div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Sales</div>
+                    <div class="metric-value">₹6,023.0 Cr</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">OPM</div>
+                    <div class="metric-value">28.8%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Promoter Holding</div>
+                    <div class="metric-value">80.0%</div>
+                </div>
+            </div>
+            
+            <div class="d-flex gap-2 mb-3">
+                <div class="growth-indicator">
+                    <i class="fas fa-chart-line"></i>
+                    <span>CAGR: 387.1% over 1 years</span>
+                </div>
+            </div>
+            
+            <div class="summary-section">
+                <h5><i class="fas fa-lightbulb text-warning"></i> AI Analysis Summary</h5>
+                <p class="summary-text">Emmvee targets FY27 annual capacity of ~16.3 GW modules and 8.9 GW cells, funded largely through internal accruals with estimated capex ~₹5,000–5,500 crore (₹600–650 crore/GW) and ~₹3,300 crore debt; revenue visibility is supported by a 10.4 GW order book and 1.5 GW Q2 new inflows, aiming to grow volumes, margins and integration benefits—leveraging TOPCon technology, phased 6 GW integrated expansion (cells+modules) and planned 9 GW ingot/wafer backward integration to reduce costs, boost utilisation and capture DCR-driven domestic demand.</p>
+            </div>
+        </div>
+    
+        <div class="company-card">
+            <div class="company-header">
+                <div>
+                    <h2 class="company-name">CEAT</h2>
+                    <div class="d-flex gap-2 flex-wrap mt-2">
+                        <a href="https://www.screener.in/company/CEATLTD/consolidated/" target="_blank" class="company-link">
+                            <i class="fas fa-external-link-alt"></i> View on Screener
+                        </a>
+                    </div>
+                </div>
+                <div class="price-change badge-danger">
+                    <i class="fas fa-arrow-up"></i> -50.6%
+                </div>
+            </div>
+            
+            <div class="metrics-grid">
+                <div class="metric-item">
+                    <div class="metric-label">Market Cap</div>
+                    <div class="metric-value">₹13,034.0 Cr</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">P/E Ratio</div>
+                    <div class="metric-value">
+                        <span class="badge badge-warning">22.8</span>
+                    </div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Sales</div>
+                    <div class="metric-value">₹17,456.0 Cr</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">OPM</div>
+                    <div class="metric-value">11.2%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Promoter Holding</div>
+                    <div class="metric-value">47.3%</div>
+                </div>
+            </div>
+            
+            <div class="d-flex gap-2 mb-3">
+                <div class="growth-indicator">
+                    <i class="fas fa-chart-line"></i>
+                    <span>CAGR: 24.3% over 1 years</span>
+                </div>
+            </div>
+            
+            <div class="summary-section">
+                <h5><i class="fas fa-lightbulb text-warning"></i> AI Analysis Summary</h5>
+                <p class="summary-text">The presentation does not state explicit future revenue targets; it reports Q2 FY27 consolidated revenue of Rs. 4,762 Cr (+26.2% YoY) and H1 FY27 revenue of Rs. 9,080 Cr (+24.3% YoY) and indicates growth will be driven by balanced product mix, OEM and replacement demand, stronger international business, price realizations/price hikes, and volume growth supported by capex and optimized logistics.</p>
+            </div>
+        </div>
+    
+        <div class="company-card">
+            <div class="company-header">
+                <div>
+                    <h2 class="company-name">Bajaj Consumer</h2>
+                    <div class="d-flex gap-2 flex-wrap mt-2">
+                        <a href="https://www.screener.in/company/BAJAJCON/consolidated/" target="_blank" class="company-link">
+                            <i class="fas fa-external-link-alt"></i> View on Screener
+                        </a>
+                    </div>
+                </div>
+                <div class="price-change badge-danger">
+                    <i class="fas fa-arrow-up"></i> -59.0%
+                </div>
+            </div>
+            
+            <div class="metrics-grid">
+                <div class="metric-item">
+                    <div class="metric-label">Market Cap</div>
+                    <div class="metric-value">₹6,131.0 Cr</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">P/E Ratio</div>
+                    <div class="metric-value">
+                        <span class="badge badge-warning">24.4</span>
+                    </div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Sales</div>
+                    <div class="metric-value">₹1,307.0 Cr</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">OPM</div>
+                    <div class="metric-value">16.5%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Promoter Holding</div>
+                    <div class="metric-value">43.0%</div>
+                </div>
+            </div>
+            
+            <div class="d-flex gap-2 mb-3">
+                <div class="growth-indicator">
+                    <i class="fas fa-chart-line"></i>
+                    <span>CAGR: 0.0% over 0 years</span>
+                </div>
+            </div>
+            
+            <div class="summary-section">
+                <h5><i class="fas fa-lightbulb text-warning"></i> AI Analysis Summary</h5>
+                <p class="summary-text">The transcript does not state explicit future revenue targets; it reports Q2 FY27 consolidated net sales of INR 332.7 crore (up 27.3% YoY) and H1 FY27 sales of INR 674.1 crore (up 27.8% YoY), and outlines how growth will be achieved: doubling down on domestic GT expansion (Project Aarohan/Aarohan 2.0), scaling growth portfolios (coconut, revamped products, new launches), premium and mass-channel activations, strong performance in OT, e‑commerce, international markets, price‑point packs, and sustained marketing and distribution investments.</p>
+            </div>
+        </div>
+    
+        <div class="section-divider">
+            <h2 class="section-title">
+                <i class="fas fa-bullhorn"></i> Company Announcements
+            </h2>
+        </div>
+    
+        <div class="announcement-card">
+            <div class="company-header">
+                <div>
+                    <h2 class="company-name">Emmvee Photovol.</h2>
+                    <div class="d-flex gap-4 flex-wrap mt-2">
+                        <a href="https://www.screener.in/company/EMMVEE/consolidated/" target="_blank" class="company-link">
+                            <i class="fas fa-external-link-alt"></i> View on Screener
+                        </a>
+                        <a href="https://www.bseindia.com/stockinfo/AnnPdfOpen.aspx?Pname=c820b444-0175-4008-abae-efd73b7963f1.pdf" target="_blank" class="company-link">
+                            <i class="fas fa-file-pdf"></i> View Announcement
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="metrics-grid">
+                <div class="metric-item">
+                    <div class="metric-label">Market Cap</div>
+                    <div class="metric-value">₹19,521.0 Cr</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">P/E Ratio</div>
+                    <div class="metric-value">
+                        <span class="badge badge-success">13.8</span>
+                    </div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Sales</div>
+                    <div class="metric-value">₹6,023.0 Cr</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">OPM 5Year</div>
+                    <div class="metric-value">28.8%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Promoter Holding</div>
+                    <div class="metric-value">80.0%</div>
+                </div>
+            </div>
+            
+            <div class="summary-section"><h5><i class="fas fa-info-circle text-info"></i> Summary</h5><p class="summary-text">Emmvee reported strong H1 FY27 results: revenue up 45% to ₹3,131.9 crore and PAT up 79% to ₹762.3 crore; Q2 revenue rose 39% to ₹1,576.4 crore. Production and capacity highlights include 952 MW modules and 513 MW cells in Q2, a 10.4 GW order book, and installed capacity of ~10.3 GW modules and 2.94 GW TOPCon cells. The company is expanding with a 6 GW integrated TOPCon module and cell project (commissioning expected Dec 2026–Mar 2027) and plans phased ingot/wafer backward integration (9 GW) subject to regulatory clarity.</p></div>
+        </div>
+        
+        <div class="announcement-card">
+            <div class="company-header">
+                <div>
+                    <h2 class="company-name">Aeroflex Enter.</h2>
+                    <div class="d-flex gap-4 flex-wrap mt-2">
+                        <a href="https://www.screener.in/company/AEROENTER/consolidated/" target="_blank" class="company-link">
+                            <i class="fas fa-external-link-alt"></i> View on Screener
+                        </a>
+                        <a href="https://www.bseindia.com/stockinfo/AnnPdfOpen.aspx?Pname=5e00044e-eb29-4a09-986c-f0e7d86a78ef.pdf" target="_blank" class="company-link">
+                            <i class="fas fa-file-pdf"></i> View Announcement
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="metrics-grid">
+                <div class="metric-item">
+                    <div class="metric-label">Market Cap</div>
+                    <div class="metric-value">₹1,423.0 Cr</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">P/E Ratio</div>
+                    <div class="metric-value">
+                        <span class="badge badge-success">9.37</span>
+                    </div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Sales</div>
+                    <div class="metric-value">₹752.0 Cr</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">OPM 5Year</div>
+                    <div class="metric-value">16.0%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Promoter Holding</div>
+                    <div class="metric-value">52.4%</div>
+                </div>
+            </div>
+            
+            <div class="summary-section"><h5><i class="fas fa-info-circle text-info"></i> Summary</h5><p class="summary-text">Aeroflex Industries (material subsidiary) completed capacity upgrades for SS Hose & Braiding (20M m/yr) and Liquid Cooling SFN Skid Assemblies (12,000 p/yr; remaining 3,000 by Dec 2026). The board approved further expansions: SS Hose & Braiding to 30M m/yr plus a new assemblies plant to convert 70–75% into assemblies (₹124 crore), and Liquid Cooling Skid Assemblies from 15,000 to 30,000 p/yr with an additional facility (₹78 crore). Total investment ₹202 crore, funded via internal accruals, equity and bridge loans; phased completion by March 2028.</p></div>
+        </div>
+        
+        <div class="announcement-card">
+            <div class="company-header">
+                <div>
+                    <h2 class="company-name">Crizac</h2>
+                    <div class="d-flex gap-4 flex-wrap mt-2">
+                        <a href="https://www.screener.in/company/CRIZAC/consolidated/" target="_blank" class="company-link">
+                            <i class="fas fa-external-link-alt"></i> View on Screener
+                        </a>
+                        <a href="https://www.bseindia.com/stockinfo/AnnPdfOpen.aspx?Pname=93007ae8-513e-4cc4-8155-558678252521.pdf" target="_blank" class="company-link">
+                            <i class="fas fa-file-pdf"></i> View Announcement
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="metrics-grid">
+                <div class="metric-item">
+                    <div class="metric-label">Market Cap</div>
+                    <div class="metric-value">₹2,661.0 Cr</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">P/E Ratio</div>
+                    <div class="metric-value">
+                        <span class="badge badge-success">12.1</span>
+                    </div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Sales</div>
+                    <div class="metric-value">₹1,034.0 Cr</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">OPM 5Year</div>
+                    <div class="metric-value">26.6%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Promoter Holding</div>
+                    <div class="metric-value">79.9%</div>
+                </div>
+            </div>
+            
+            <div class="summary-section"><h5><i class="fas fa-info-circle text-info"></i> Summary</h5><p class="summary-text">Crizac Limited launched the Partner Growth Program (PGP) to help its 17,400+ counselling partners grow. PGP offers ready-to-post marketing content, counsellor training and certification at discounted rates, and professional branding, all accessible via existing Crizac accounts. The program aims to reduce partners’ marketing and training burden, let them focus on counselling, and will be expanded iteratively with new tools and features. Crizac positions PGP as tech-enabled support (including AI tools) rather than research or innovation-focused R&D.</p></div>
+        </div>
+        
+        <div class="announcement-card">
+            <div class="company-header">
+                <div>
+                    <h2 class="company-name">South West Pinn.</h2>
+                    <div class="d-flex gap-4 flex-wrap mt-2">
+                        <a href="https://www.screener.in/company/SOUTHWEST/consolidated/" target="_blank" class="company-link">
+                            <i class="fas fa-external-link-alt"></i> View on Screener
+                        </a>
+                        <a href="https://www.bseindia.com/stockinfo/AnnPdfOpen.aspx?Pname=2865f596-85b6-4b9b-b7a0-1daaa650e060.pdf" target="_blank" class="company-link">
+                            <i class="fas fa-file-pdf"></i> View Announcement
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="metrics-grid">
+                <div class="metric-item">
+                    <div class="metric-label">Market Cap</div>
+                    <div class="metric-value">₹647.0 Cr</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">P/E Ratio</div>
+                    <div class="metric-value">
+                        <span class="badge badge-warning">16.2</span>
+                    </div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Sales</div>
+                    <div class="metric-value">₹264.0 Cr</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">OPM 5Year</div>
+                    <div class="metric-value">20.3%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Promoter Holding</div>
+                    <div class="metric-value">61.7%</div>
+                </div>
+            </div>
+            
+            <div class="summary-section"><h5><i class="fas fa-info-circle text-info"></i> Summary</h5><p class="summary-text">South West Pinnacle Exploration Ltd. (via JV Al Hadeetha Mining LLC) completed a HeliTEM airborne EM/magnetic survey (6,132 line-km) across a ~1,400 km2 concession in Oman, identifying 12 copper–gold prospect areas. Rock-chip sampling returned peak copper of 22,681 ppm (2.27%) with visible malachite; additional elevated Cu values found at other prospects. Field verification at a corridor is done; further mapping, sampling and follow-up staged exploration are planned. Interpretation report expected by Q2 FY27.</p></div>
+        </div>
+        
+        <div class="announcement-card">
+            <div class="company-header">
+                <div>
+                    <h2 class="company-name">Blue Cloud Soft.</h2>
+                    <div class="d-flex gap-4 flex-wrap mt-2">
+                        <a href="https://www.screener.in/company/BLUECLOUDS/consolidated/" target="_blank" class="company-link">
+                            <i class="fas fa-external-link-alt"></i> View on Screener
+                        </a>
+                        <a href="https://www.bseindia.com/stockinfo/AnnPdfOpen.aspx?Pname=5f39d9e9-08bc-4fb3-9db9-135e91b02e21.pdf" target="_blank" class="company-link">
+                            <i class="fas fa-file-pdf"></i> View Announcement
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="metrics-grid">
+                <div class="metric-item">
+                    <div class="metric-label">Market Cap</div>
+                    <div class="metric-value">₹1,830.0 Cr</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">P/E Ratio</div>
+                    <div class="metric-value">
+                        <span class="badge badge-danger">28.6</span>
+                    </div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Sales</div>
+                    <div class="metric-value">₹1,088.0 Cr</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">OPM 5Year</div>
+                    <div class="metric-value">%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Promoter Holding</div>
+                    <div class="metric-value">38.4%</div>
+                </div>
+            </div>
+            
+            <div class="summary-section"><h5><i class="fas fa-info-circle text-info"></i> Summary</h5><p class="summary-text">Blue Cloud announced completion of the architecture phase and delivery of ~₹25 crore in the first quarter of a USD 150 million programme with SpaceX International Ltd, Labuan. The programme covers AI infrastructure and data centres, cybersecurity, and telecommunications, executed via Blue Cloud USA. Engineering work continues into the next quarter with a focus on scaling build, deployment, and security assurance.</p></div>
+        </div>
+        
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        let cards = [];
+        let availableReports = [];
+        let currentReportDate = null;
+        let isLoadingReports = false;
+        const githubApiBase = 'https://api.github.com/repos/eldhoz515/stock-analysis/contents/concalls';
+        const githubPagesBase = 'https://eldhoz515.github.io/stock-analysis/concalls';
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            cards = Array.from(document.querySelectorAll('.hero-section, .company-card, .announcement-card'));
+            initializeNavigation();
+        });
+        
+        function getCurrentVisibleCardIndex() {
+            if (cards.length === 0) return -1;
+            
+            const viewportTop = window.scrollY;
+            const viewportCenter = viewportTop + (window.innerHeight / 2);
+            
+            // Find the card closest to the center of the viewport
+            let closestIndex = 0;
+            let closestDistance = Infinity;
+            
+            cards.forEach((card, index) => {
+                const rect = card.getBoundingClientRect();
+                const cardTop = rect.top + window.scrollY;
+                const cardCenter = cardTop + (rect.height / 2);
+                const distance = Math.abs(cardCenter - viewportCenter);
+                
+                if (distance < closestDistance) {
+                    closestDistance = distance;
+                    closestIndex = index;
+                }
+            });
+            
+            return closestIndex;
+        }
+        
+        function focusCard(index) {
+            if (cards.length === 0) return;
+            
+            // Handle boundary conditions
+            if (index < 0) index = cards.length - 1;
+            if (index >= cards.length) index = 0;
+            
+            if (cards[index]) {
+                cards[index].scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }
+        
+        async function initializeNavigation() {
+            // Extract current report date from URL
+            const currentFilename = window.location.pathname.split('/').pop();
+            const dateMatch = currentFilename.match(/(\d{4}-\d{2}-\d{2})_(\d{4}-\d{2}-\d{2})\.html/);
+            
+            if (dateMatch) {
+                currentReportDate = dateMatch[1]; // Use start date
+                await loadAvailableReports();
+            }
+        }
+        
+        async function loadAvailableReports() {
+            if (isLoadingReports) return;
+            isLoadingReports = true;
+            
+            try {
+                const response = await fetch(githubApiBase);
+                const files = await response.json();
+                
+                if (Array.isArray(files)) {
+                    const reports = [];
+                    files.forEach(file => {
+                        const match = file.name.match(/(\d{4}-\d{2}-\d{2})_(\d{4}-\d{2}-\d{2})\.html/);
+                        if (match) {
+                            reports.push({
+                                startDate: match[1],
+                                endDate: match[2],
+                                filename: file.name,
+                                url: `${githubPagesBase}/${file.name}`
+                            });
+                        }
+                    });
+                    
+                    // Sort by start date
+                    reports.sort((a, b) => a.startDate.localeCompare(b.startDate));
+                    availableReports = reports;
+                }
+            } catch (error) {
+                console.error('Error loading reports:', error);
+            } finally {
+                isLoadingReports = false;
+            }
+        }
+        
+        function navigateToReport(direction) {
+            if (!currentReportDate || availableReports.length === 0) return;
+            
+            const currentIndex = availableReports.findIndex(r => r.startDate === currentReportDate);
+            if (currentIndex === -1) return;
+            
+            let targetIndex;
+            if (direction === 'prev') {
+                targetIndex = currentIndex - 1;
+                if (targetIndex < 0) targetIndex = availableReports.length - 1; // Wrap to last
+            } else {
+                targetIndex = currentIndex + 1;
+                if (targetIndex >= availableReports.length) targetIndex = 0; // Wrap to first
+            }
+            
+            const targetReport = availableReports[targetIndex];
+            if (targetReport) {
+                window.location.href = targetReport.url;
+            }
+        }
+        
+        document.addEventListener('keydown', function(e) {
+            if (['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) return;
+            
+            // Check if Shift key is pressed for date navigation
+            if (e.shiftKey) {
+                if (e.key === 'ArrowLeft') {
+                    e.preventDefault();
+                    navigateToReport('prev');
+                    return;
+                } else if (e.key === 'ArrowRight') {
+                    e.preventDefault();
+                    navigateToReport('next');
+                    return;
+                }
+            }
+            
+            // Default card navigation (without Shift)
+            const currentIndex = getCurrentVisibleCardIndex();
+            
+            if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                focusCard(currentIndex - 1);
+            } else if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                focusCard(currentIndex + 1);
+            } else if (e.key === 'ArrowLeft') {
+                e.preventDefault();
+                focusCard(currentIndex - 1);
+            } else if (e.key === 'ArrowRight') {
+                e.preventDefault();
+                focusCard(currentIndex + 1);
+            } else if (e.key === 'Home') {
+                e.preventDefault();
+                focusCard(0);
+            } else if (e.key === 'End') {
+                e.preventDefault();
+                focusCard(cards.length - 1);
+            }
+        });
+        
+        // Optional: Handle clicks for immediate scrolling
+        document.addEventListener('click', function(e) {
+            const clickedCard = e.target.closest('.company-card, .announcement-card');
+            if (clickedCard) {
+                clickedCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        });
+    </script>
+</body>
+</html>
